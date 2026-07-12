@@ -1,7 +1,7 @@
 import type {
   LearningQuestionId,
   ThemeId,
-} from "@/domains/shared/types/ids";
+} from "@/domains/academy/types/ids";
 
 export interface Theme {
   id: ThemeId;

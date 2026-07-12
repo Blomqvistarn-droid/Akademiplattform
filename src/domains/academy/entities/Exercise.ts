@@ -1,4 +1,4 @@
-import type { ExerciseId } from "@/domains/shared/types/ids";
+import type { ExerciseId } from "@/domains/academy/types/ids";
 
 export type ActivityType =
   | "Battle Rondo"

@@ -1,11 +1,11 @@
 import type {
-  EducationProgramId,
   LearningQuestionId,
-} from "@/domains/shared/types/ids";
+  ProgramId,
+} from "@/domains/academy/types/ids";
 
 export interface LearningQuestion {
   id: LearningQuestionId;
-  programId: EducationProgramId;
+  programId: ProgramId;
   title: string;
   description: string;
 }

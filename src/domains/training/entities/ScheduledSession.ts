@@ -1,8 +1,8 @@
 import type {
   ScheduledSessionId,
-  SessionTemplateId,
   TeamId,
 } from "@/domains/shared/types/ids";
+import type { SessionTemplateId } from "@/domains/academy/types/ids";
 
 export type ScheduledSessionStatus = "planned" | "completed" | "cancelled";
 

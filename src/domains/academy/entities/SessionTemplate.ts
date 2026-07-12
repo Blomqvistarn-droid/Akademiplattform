@@ -1,7 +1,7 @@
 import type {
   EducationBlockId,
   SessionTemplateId,
-} from "@/domains/shared/types/ids";
+} from "@/domains/academy/types/ids";
 import type { SessionTemplatePart } from "./SessionTemplatePart";
 
 export type SessionStage =

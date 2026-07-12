@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Header } from "@/components/Header";
+import { toSessionTemplateId } from "@/domains/academy/types/ids";
 import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
 
 export default function HomePage() {
-  const session = localEducationContentRepository.getSessionTemplate("session-winger-1")!;
+  const session = localEducationContentRepository.getSessionTemplate(toSessionTemplateId("session-winger-1"))!;
   return <>
     <Header eyebrow="7 mot 7 · nivå 1" title="Nästa träning" />
     <section className="heroCard">

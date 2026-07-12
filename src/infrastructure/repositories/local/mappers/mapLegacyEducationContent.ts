@@ -6,11 +6,15 @@ import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate
 import type { SessionTemplatePart } from "@/domains/academy/entities/SessionTemplatePart";
 import type { Theme } from "@/domains/academy/entities/Theme";
 import type { AcademyContent } from "@/domains/academy/validation/validateEducationContent";
-import type {
-  EducationProgramId,
-  LearningQuestionId,
-  ThemeId,
-} from "@/domains/shared/types/ids";
+import {
+  toEducationBlockId,
+  toExerciseId,
+  toLearningQuestionId,
+  toProgramId,
+  toSessionTemplateId,
+  toThemeId,
+} from "../../../../domains/academy/types/ids";
+import type { ThemeId } from "@/domains/academy/types/ids";
 import type {
   EducationBlock as LegacyEducationBlock,
   Exercise as LegacyExercise,
@@ -19,7 +23,7 @@ import type {
   SessionPart,
 } from "@/types/education";
 
-const PROGRAM_ID: EducationProgramId = "program-7v7";
+const PROGRAM_ID = toProgramId("program-7v7");
 
 export interface LegacyEducationContent {
   readonly questions: readonly GuidingQuestion[];
@@ -30,8 +34,8 @@ export interface LegacyEducationContent {
 
 export type MappedEducationContent = AcademyContent;
 
-function createThemeId(questionId: LearningQuestionId): ThemeId {
-  return `theme-${questionId}`;
+function createThemeId(questionId: string): ThemeId {
+  return toThemeId(`theme-${questionId}`);
 }
 
 function mapEducationProgram(): EducationProgram {
@@ -44,7 +48,7 @@ function mapEducationProgram(): EducationProgram {
 
 function mapLearningQuestion(question: GuidingQuestion): LearningQuestion {
   return {
-    id: question.id,
+    id: toLearningQuestionId(question.id),
     programId: PROGRAM_ID,
     title: question.title,
     description: question.description,
@@ -54,7 +58,7 @@ function mapLearningQuestion(question: GuidingQuestion): LearningQuestion {
 function mapTheme(question: GuidingQuestion): Theme {
   return {
     id: createThemeId(question.id),
-    learningQuestionId: question.id,
+    learningQuestionId: toLearningQuestionId(question.id),
     title: question.title,
     description: question.description,
   };
@@ -64,7 +68,7 @@ function mapEducationBlock(
   block: LegacyEducationBlock,
 ): AcademyEducationBlock {
   return {
-    id: block.id,
+    id: toEducationBlockId(block.id),
     themeId: createThemeId(block.questionId),
     title: block.title,
     level: block.level,
@@ -75,7 +79,7 @@ function mapEducationBlock(
 
 function mapSessionTemplatePart(part: SessionPart): SessionTemplatePart {
   return {
-    exerciseId: part.exerciseId,
+    exerciseId: toExerciseId(part.exerciseId),
     duration: part.duration,
     focus: part.focus,
     optional: part.optional,
@@ -84,9 +88,9 @@ function mapSessionTemplatePart(part: SessionPart): SessionTemplatePart {
 
 function mapSessionTemplate(session: Session): SessionTemplate {
   return {
-    id: session.id,
+    id: toSessionTemplateId(session.id),
     title: session.title,
-    blockId: session.blockId,
+    blockId: toEducationBlockId(session.blockId),
     stage: session.stage,
     duration: session.duration,
     players: session.players,
@@ -99,7 +103,7 @@ function mapSessionTemplate(session: Session): SessionTemplate {
 
 function mapExercise(exercise: LegacyExercise): AcademyExercise {
   return {
-    id: exercise.id,
+    id: toExerciseId(exercise.id),
     title: exercise.title,
     activityType: exercise.activityType,
     players: exercise.players,

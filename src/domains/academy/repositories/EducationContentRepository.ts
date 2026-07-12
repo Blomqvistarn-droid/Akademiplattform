@@ -6,16 +6,16 @@ import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate
 import type { Theme } from "@/domains/academy/entities/Theme";
 import type {
   EducationBlockId,
-  EducationProgramId,
   ExerciseId,
   LearningQuestionId,
+  ProgramId,
   SessionTemplateId,
   ThemeId,
-} from "@/domains/shared/types/ids";
+} from "@/domains/academy/types/ids";
 
 export interface EducationContentRepository {
   getPrograms(): readonly EducationProgram[];
-  getProgram(id: EducationProgramId): EducationProgram | null;
+  getProgram(id: ProgramId): EducationProgram | null;
   getQuestions(): readonly LearningQuestion[];
   getQuestion(id: LearningQuestionId): LearningQuestion | null;
   getThemes(): readonly Theme[];

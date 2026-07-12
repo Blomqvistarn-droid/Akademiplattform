@@ -1,7 +1,7 @@
 import type {
   EducationBlockId,
   ThemeId,
-} from "@/domains/shared/types/ids";
+} from "@/domains/academy/types/ids";
 
 export interface EducationBlock {
   id: EducationBlockId;

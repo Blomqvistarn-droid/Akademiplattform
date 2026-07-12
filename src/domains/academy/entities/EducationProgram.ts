@@ -1,7 +1,7 @@
-import type { EducationProgramId } from "@/domains/shared/types/ids";
+import type { ProgramId } from "@/domains/academy/types/ids";
 
 export interface EducationProgram {
-  id: EducationProgramId;
+  id: ProgramId;
   title: string;
   description: string;
 }

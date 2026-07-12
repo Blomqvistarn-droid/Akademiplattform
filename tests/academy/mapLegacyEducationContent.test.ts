@@ -2,6 +2,17 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { blocks, exercises, questions, sessions } from "../../src/data/content";
 import { validateEducationContent } from "../../src/domains/academy/validation/validateEducationContent";
+import {
+  toEducationBlockId,
+  toExerciseId,
+  toLearningQuestionId,
+  toProgramId,
+  toThemeId,
+} from "../../src/domains/academy/types/ids";
+import type {
+  ExerciseId,
+  SessionTemplateId,
+} from "../../src/domains/academy/types/ids";
 import { mapLegacyEducationContent } from "../../src/infrastructure/repositories/local/mappers/mapLegacyEducationContent";
 
 const mappedContent = mapLegacyEducationContent({
@@ -49,6 +60,18 @@ test("preserves known IDs and source ordering", () => {
   );
 });
 
+test("produces nominally typed academy IDs without changing their values", () => {
+  const sessionId: SessionTemplateId = mappedContent.sessionTemplates[0].id;
+  const exerciseId: ExerciseId = mappedContent.exercises[0].id;
+
+  assert.equal(sessionId, sessions[0].id);
+  assert.equal(exerciseId, exercises[0].id);
+
+  // @ts-expect-error Exercise IDs must not be assignable to session template IDs.
+  const invalidSessionId: SessionTemplateId = exerciseId;
+  assert.equal(invalidSessionId, exerciseId);
+});
+
 test("accepts valid mapped cross-references", () => {
   assert.doesNotThrow(() => validateEducationContent(mappedContent));
 });
@@ -71,7 +94,10 @@ test("rejects broken academy cross-references", async (context) => {
         validateEducationContent({
           ...mappedContent,
           learningQuestions: [
-            { ...mappedContent.learningQuestions[0], programId: "missing" },
+            {
+              ...mappedContent.learningQuestions[0],
+              programId: toProgramId("missing"),
+            },
           ],
         }),
       /LearningQuestion .* references missing ID "missing"/,
@@ -84,7 +110,10 @@ test("rejects broken academy cross-references", async (context) => {
         validateEducationContent({
           ...mappedContent,
           themes: [
-            { ...mappedContent.themes[0], learningQuestionId: "missing" },
+            {
+              ...mappedContent.themes[0],
+              learningQuestionId: toLearningQuestionId("missing"),
+            },
           ],
         }),
       /Theme .* references missing ID "missing"/,
@@ -97,7 +126,10 @@ test("rejects broken academy cross-references", async (context) => {
         validateEducationContent({
           ...mappedContent,
           educationBlocks: [
-            { ...mappedContent.educationBlocks[0], themeId: "missing" },
+            {
+              ...mappedContent.educationBlocks[0],
+              themeId: toThemeId("missing"),
+            },
           ],
         }),
       /EducationBlock .* references missing ID "missing"/,
@@ -110,7 +142,10 @@ test("rejects broken academy cross-references", async (context) => {
         validateEducationContent({
           ...mappedContent,
           sessionTemplates: [
-            { ...mappedContent.sessionTemplates[0], blockId: "missing" },
+            {
+              ...mappedContent.sessionTemplates[0],
+              blockId: toEducationBlockId("missing"),
+            },
           ],
         }),
       /SessionTemplate .* references missing ID "missing"/,
@@ -126,7 +161,9 @@ test("rejects broken academy cross-references", async (context) => {
           sessionTemplates: [
             {
               ...session,
-              parts: [{ ...session.parts[0], exerciseId: "missing" }],
+              parts: [
+                { ...session.parts[0], exerciseId: toExerciseId("missing") },
+              ],
             },
           ],
         }),
