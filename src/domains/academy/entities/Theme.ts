@@ -1,5 +1,4 @@
 import type {
-  EducationBlockId,
   LearningQuestionId,
   ThemeId,
 } from "@/domains/shared/types/ids";
@@ -9,5 +8,4 @@ export interface Theme {
   learningQuestionId: LearningQuestionId;
   title: string;
   description: string;
-  educationBlockIds: EducationBlockId[];
 }

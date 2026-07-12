@@ -1,7 +1,6 @@
 import type {
   EducationProgramId,
   LearningQuestionId,
-  ThemeId,
 } from "@/domains/shared/types/ids";
 
 export interface LearningQuestion {
@@ -9,5 +8,4 @@ export interface LearningQuestion {
   programId: EducationProgramId;
   title: string;
   description: string;
-  themeIds: ThemeId[];
 }
