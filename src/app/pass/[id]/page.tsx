@@ -2,11 +2,13 @@
 import { useMemo, useState } from "react";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
-import { getExercise, getSession } from "@/data/content";
+import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
 import { adaptSession } from "@/lib/adaptation";
 
+const getExercise = localEducationContentRepository.getExercise;
+
 export default function SessionDetail({ params }: { params: { id: string } }) {
-  const session = getSession(params.id);
+  const session = localEducationContentRepository.getSession(params.id);
   const [minutes, setMinutes] = useState(session?.duration ?? 75);
   if (!session) return notFound();
   const parts = useMemo(() => adaptSession(session, minutes), [session, minutes]);
