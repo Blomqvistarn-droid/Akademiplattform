@@ -1,6 +1,6 @@
-import { Session } from "@/types/education";
+import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate";
 
-export function adaptSession(session: Session, targetMinutes: number) {
+export function adaptSession(session: SessionTemplate, targetMinutes: number) {
   const mandatory = session.parts.filter((part) => !part.optional);
   const optional = session.parts.filter((part) => part.optional);
   const mandatoryTotal = mandatory.reduce((sum, part) => sum + part.duration, 0);

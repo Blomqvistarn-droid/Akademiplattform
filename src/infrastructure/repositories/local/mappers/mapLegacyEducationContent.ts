@@ -5,6 +5,7 @@ import type { LearningQuestion } from "@/domains/academy/entities/LearningQuesti
 import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate";
 import type { SessionTemplatePart } from "@/domains/academy/entities/SessionTemplatePart";
 import type { Theme } from "@/domains/academy/entities/Theme";
+import type { AcademyContent } from "@/domains/academy/validation/validateEducationContent";
 import type {
   EducationProgramId,
   LearningQuestionId,
@@ -27,14 +28,7 @@ export interface LegacyEducationContent {
   readonly exercises: readonly LegacyExercise[];
 }
 
-export interface MappedEducationContent {
-  readonly programs: readonly EducationProgram[];
-  readonly learningQuestions: readonly LearningQuestion[];
-  readonly themes: readonly Theme[];
-  readonly educationBlocks: readonly AcademyEducationBlock[];
-  readonly sessionTemplates: readonly SessionTemplate[];
-  readonly exercises: readonly AcademyExercise[];
-}
+export type MappedEducationContent = AcademyContent;
 
 function createThemeId(questionId: LearningQuestionId): ThemeId {
   return `theme-${questionId}`;

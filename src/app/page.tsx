@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
 
 export default function HomePage() {
-  const session = localEducationContentRepository.getSession("session-winger-1")!;
+  const session = localEducationContentRepository.getSessionTemplate("session-winger-1")!;
   return <>
     <Header eyebrow="7 mot 7 · nivå 1" title="Nästa träning" />
     <section className="heroCard">
