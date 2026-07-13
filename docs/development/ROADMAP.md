@@ -39,6 +39,8 @@ Innehåll:
 
 ### Version 0.2 – Datalager
 
+Status: Klar
+
 Planerat innehåll:
 
 - Repository-implementationer
@@ -49,13 +51,24 @@ Planerat innehåll:
 
 ### Version 0.3 – Organisation
 
+Status: Klar (första vertikala referensflöde)
+
 Planerat innehåll:
 
-- Organisationer
-- Lag
-- Roller
-- Medlemmar
-- Behörigheter
+- Application Layer (commands, queries, handlers, DTO)
+- Unit of Work och transaktionsgränser
+- Standardiserad felmodell
+- HTTP API för Training (CRUD + arkivering)
+- Organization isolation genom hela flödet
+- Unit-, integrations- och API-tester
+
+Levererat i versionen:
+
+- POST /api/trainings
+- GET /api/trainings
+- GET /api/trainings/{id}
+- PUT /api/trainings/{id}
+- DELETE /api/trainings/{id}
 
 ### Version 0.4 – Tränarplattform
 
@@ -108,3 +121,9 @@ Planerat:
 ## Principer
 
 Roadmapen är ett levande dokument som uppdateras efter varje sprint och större arkitekturbeslut för att spegla aktuell riktning, prioriteringar och tekniska beslut.
+
+## Verifierad status v0.3
+
+- `npm test`: 62 pass, 0 fail
+- `npm run test:integration`: 7 pass, 0 fail
+- `npm run build`: passerar

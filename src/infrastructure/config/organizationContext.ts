@@ -1,8 +1,8 @@
 import {
   createOrganizationContext,
   type OrganizationContext,
-} from "@/application/context/OrganizationContext";
-import type { OrganizationId } from "@/domains/shared/types/ids";
+} from "../../application/context/OrganizationContext";
+import type { OrganizationId } from "../../domains/shared/types/ids";
 
 export function readOrganizationContextFromEnv(
   env: NodeJS.ProcessEnv = process.env,

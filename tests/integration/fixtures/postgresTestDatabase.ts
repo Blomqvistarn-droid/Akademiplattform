@@ -67,5 +67,6 @@ export function createSchemaScopedPool(db: PostgresTestDatabase): Pool {
   return new Pool({
     connectionString: db.connectionString,
     options: `-c search_path=${db.schemaName},public`,
+    max: 1,
   });
 }

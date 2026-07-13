@@ -1,6 +1,6 @@
-import type { OrganizationContext } from "@/application/context/OrganizationContext";
-import type { EducationContentRepository } from "@/domains/academy/repositories/EducationContentRepository";
-import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
+import type { OrganizationContext } from "../../../application/context/OrganizationContext";
+import type { EducationContentRepository } from "../../../domains/academy/repositories/EducationContentRepository";
+import { localEducationContentRepository } from "../local/localEducationContentRepository";
 import type { Pool } from "pg";
 
 export interface PostgresEducationContentRepositoryOptions {

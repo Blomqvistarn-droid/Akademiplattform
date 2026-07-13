@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test": "tsc -p tsconfig.test.json && node --test dist/test/tests/**/*.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test --test-concurrency=1 dist/test/tests/**/*.test.js",
     "test:integration": "node --test dist/test/tests/integration/**/*.test.js",
     "start": "next start",
     "lint": "next lint",

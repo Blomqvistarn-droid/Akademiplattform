@@ -1,21 +1,21 @@
-import type { OrganizationContext } from "@/application/context/OrganizationContext";
-import type { TransactionRunner } from "@/application/transactions/TransactionRunner";
-import type { EducationContentRepository } from "@/domains/academy/repositories/EducationContentRepository";
-import type { TrainingRepository } from "@/domains/training/repositories/TrainingRepository";
-import { readOrganizationContextFromEnv } from "@/infrastructure/config/organizationContext";
+import type { OrganizationContext } from "../application/context/OrganizationContext";
+import type { TransactionRunner } from "../application/transactions/TransactionRunner";
+import type { EducationContentRepository } from "../domains/academy/repositories/EducationContentRepository";
+import type { TrainingRepository } from "../domains/training/repositories/TrainingRepository";
+import { readOrganizationContextFromEnv } from "../infrastructure/config/organizationContext";
 import {
   readRepositoryProviderFromEnv,
   type RepositoryProvider,
-} from "@/infrastructure/config/repositoryProvider";
+} from "../infrastructure/config/repositoryProvider";
 import {
   createPostgresEducationContentRepository,
-} from "@/infrastructure/repositories/database/postgresEducationContentRepository";
-import { createPostgresTrainingRepository } from "@/infrastructure/repositories/database/postgresTrainingRepository";
-import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
-import { createLocalTrainingRepository } from "@/infrastructure/repositories/local/localTrainingRepository";
-import { getPostgresPool } from "@/infrastructure/persistence/postgres/postgresPool";
-import { InMemoryTransactionRunner } from "@/infrastructure/transactions/InMemoryTransactionRunner";
-import { PostgresTransactionRunner } from "@/infrastructure/transactions/PostgresTransactionRunner";
+} from "../infrastructure/repositories/database/postgresEducationContentRepository";
+import { createPostgresTrainingRepository } from "../infrastructure/repositories/database/postgresTrainingRepository";
+import { localEducationContentRepository } from "../infrastructure/repositories/local/localEducationContentRepository";
+import { createLocalTrainingRepository } from "../infrastructure/repositories/local/localTrainingRepository";
+import { getPostgresPool } from "../infrastructure/persistence/postgres/postgresPool";
+import { InMemoryTransactionRunner } from "../infrastructure/transactions/InMemoryTransactionRunner";
+import { PostgresTransactionRunner } from "../infrastructure/transactions/PostgresTransactionRunner";
 
 export interface RuntimeDependencies {
   provider: RepositoryProvider;

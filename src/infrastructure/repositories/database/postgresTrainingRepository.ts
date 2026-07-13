@@ -131,5 +131,95 @@ export function createPostgresTrainingRepository(
 
       return result.rows.map(mapTeamProgress);
     },
+    createScheduledSession: async (input) => {
+      const result = await queryWithTransactionClient(
+        pool,
+        `
+          INSERT INTO scheduled_session (
+            id,
+            organization_id,
+            team_id,
+            session_template_id,
+            scheduled_at,
+            status,
+            created_at,
+            updated_at
+          )
+          VALUES ($1, $2, $3, $4, $5, 'planned', NOW(), NOW())
+          RETURNING id, team_id, session_template_id, scheduled_at, status
+        `,
+        [
+          input.id,
+          organizationContext.organizationId,
+          input.teamId,
+          input.sessionTemplateId,
+          input.scheduledAt,
+        ],
+      );
+
+      return mapScheduledSession(result.rows[0]);
+    },
+    updateScheduledSession: async (id, input) => {
+      const existing = await queryWithTransactionClient(
+        pool,
+        `
+          SELECT id
+          FROM scheduled_session
+          WHERE organization_id = $1
+            AND id = $2
+          LIMIT 1
+        `,
+        [organizationContext.organizationId, id],
+      );
+
+      if (existing.rowCount === 0) {
+        return null;
+      }
+
+      const result = await queryWithTransactionClient(
+        pool,
+        `
+          UPDATE scheduled_session
+          SET
+            team_id = COALESCE($3, team_id),
+            session_template_id = COALESCE($4, session_template_id),
+            scheduled_at = COALESCE($5, scheduled_at),
+            status = COALESCE($6, status),
+            updated_at = NOW()
+          WHERE organization_id = $1
+            AND id = $2
+          RETURNING id, team_id, session_template_id, scheduled_at, status
+        `,
+        [
+          organizationContext.organizationId,
+          id,
+          input.teamId ?? null,
+          input.sessionTemplateId ?? null,
+          input.scheduledAt ?? null,
+          input.status ?? null,
+        ],
+      );
+
+      return mapScheduledSession(result.rows[0]);
+    },
+    archiveScheduledSession: async (id) => {
+      const result = await queryWithTransactionClient(
+        pool,
+        `
+          UPDATE scheduled_session
+          SET status = 'cancelled', updated_at = NOW()
+          WHERE organization_id = $1
+            AND id = $2
+          RETURNING id, team_id, session_template_id, scheduled_at, status
+        `,
+        [organizationContext.organizationId, id],
+      );
+
+      if (result.rowCount === 0) {
+        return null;
+      }
+
+      return mapScheduledSession(result.rows[0]);
+    },
   };
 }

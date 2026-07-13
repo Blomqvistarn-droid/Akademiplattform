@@ -15,6 +15,13 @@ interface ScopedTrainingData {
   readonly progress: readonly TeamProgress[];
 }
 
+interface MutableScopedTrainingData {
+  organizationId: string;
+  scheduledSessions: ScheduledSession[];
+  reflections: SessionReflection[];
+  progress: TeamProgress[];
+}
+
 const TRAINING_DATA: readonly ScopedTrainingData[] = [
   {
     organizationId: "00000000-0000-0000-0000-000000000001",
@@ -77,19 +84,34 @@ const TRAINING_DATA: readonly ScopedTrainingData[] = [
   },
 ];
 
-function getScopedData(organizationId: string): ScopedTrainingData {
-  const scoped = TRAINING_DATA.find((item) => item.organizationId === organizationId);
+const STORE = new Map<string, MutableScopedTrainingData>(
+  TRAINING_DATA.map((item) => [
+    item.organizationId,
+    {
+      organizationId: item.organizationId,
+      scheduledSessions: [...item.scheduledSessions],
+      reflections: [...item.reflections],
+      progress: [...item.progress],
+    },
+  ]),
+);
 
-  if (!scoped) {
-    return {
-      organizationId,
-      scheduledSessions: [],
-      reflections: [],
-      progress: [],
-    };
+function getScopedData(organizationId: string): MutableScopedTrainingData {
+  const existing = STORE.get(organizationId);
+
+  if (existing) {
+    return existing;
   }
 
-  return scoped;
+  const created: MutableScopedTrainingData = {
+    organizationId,
+    scheduledSessions: [],
+    reflections: [],
+    progress: [],
+  };
+
+  STORE.set(organizationId, created);
+  return created;
 }
 
 export function createLocalTrainingRepository(
@@ -98,7 +120,7 @@ export function createLocalTrainingRepository(
   const scoped = getScopedData(context.organizationId);
 
   return {
-    getScheduledSessions: async () => scoped.scheduledSessions,
+    getScheduledSessions: async () => [...scoped.scheduledSessions],
     getScheduledSession: async (id) =>
       scoped.scheduledSessions.find((session) => session.id === id) ?? null,
     getReflectionsByTeam: async (teamId) => {
@@ -118,5 +140,49 @@ export function createLocalTrainingRepository(
       ),
     getProgressByTeam: async (teamId) =>
       scoped.progress.filter((entry) => entry.teamId === teamId),
+    createScheduledSession: async (input) => {
+      const created: ScheduledSession = {
+        id: input.id,
+        teamId: input.teamId,
+        sessionTemplateId: input.sessionTemplateId,
+        scheduledAt: input.scheduledAt,
+        status: "planned",
+      };
+
+      scoped.scheduledSessions.push(created);
+      return created;
+    },
+    updateScheduledSession: async (id, input) => {
+      const session = scoped.scheduledSessions.find((item) => item.id === id);
+
+      if (!session) {
+        return null;
+      }
+
+      if (input.teamId) {
+        session.teamId = input.teamId;
+      }
+      if (input.sessionTemplateId) {
+        session.sessionTemplateId = input.sessionTemplateId;
+      }
+      if (input.scheduledAt) {
+        session.scheduledAt = input.scheduledAt;
+      }
+      if (input.status) {
+        session.status = input.status;
+      }
+
+      return session;
+    },
+    archiveScheduledSession: async (id) => {
+      const session = scoped.scheduledSessions.find((item) => item.id === id);
+
+      if (!session) {
+        return null;
+      }
+
+      session.status = "cancelled";
+      return session;
+    },
   };
 }
