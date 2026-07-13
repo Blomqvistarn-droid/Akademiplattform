@@ -27,8 +27,7 @@ npm run dev
 
 ## Viktiga filer
 
-- `src/data/content.ts` – teman, block, övningar och pass
-- `src/types/education.ts` – innehållsmodell och TypeScript-typer
+- `src/data/academyContent.ts` – teman, block, övningar och pass
 - `src/lib/adaptation.ts` – anpassning efter träningstid
 - `src/lib/storage.ts` – grund för lokal lagring
 

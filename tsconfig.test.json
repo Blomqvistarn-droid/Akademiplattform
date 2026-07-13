@@ -15,8 +15,7 @@
     "outDir": "dist/test"
   },
   "include": [
-    "src/types/education.ts",
-    "src/data/content.ts",
+    "src/data/academyContent.ts",
     "src/domains/academy/**/*.ts",
     "src/domains/shared/types/ids.ts",
     "src/infrastructure/repositories/local/**/*.ts",

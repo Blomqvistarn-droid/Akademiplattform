@@ -24,7 +24,7 @@ Akademiplattform är en digital plattform för strukturerad fotbollsutbildning o
 
 ### Version 0.1 – Arkitekturgrund
 
-Status: Pågår
+Status: Klar
 
 Innehåll:
 
@@ -98,12 +98,12 @@ Klart:
 
 Pågående:
 
-- [ ] Migrering till academy-domänmodellen
+- [x] Migrering till academy-domänmodellen
 
 Planerat:
 
-- [ ] Avveckling av src/types/education.ts
-- [ ] Repository-tester
+- [x] Avveckling av src/types/education.ts
+- [x] Repository-tester
 
 ## Principer
 

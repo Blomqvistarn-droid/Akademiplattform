@@ -1,14 +1,8 @@
 import type { EducationContentRepository } from "@/domains/academy/repositories/EducationContentRepository";
 import { validateEducationContent } from "../../../domains/academy/validation/validateEducationContent";
-import { blocks, exercises, questions, sessions } from "../../../data/content";
-import { mapLegacyEducationContent } from "./mappers/mapLegacyEducationContent";
+import { academyContent } from "../../../data/academyContent";
 
-const content = mapLegacyEducationContent({
-  questions,
-  blocks,
-  sessions,
-  exercises,
-});
+const content = academyContent;
 
 validateEducationContent(content);
 
