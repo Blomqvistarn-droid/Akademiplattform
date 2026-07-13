@@ -21,12 +21,20 @@ export interface ProgramStructure {
 
 export function getProgramStructures(
   repository: EducationContentRepository,
-): readonly ProgramStructure[] {
-  const questions = repository.getQuestions();
-  const themes = repository.getThemes();
-  const blocks = repository.getBlocks();
+): Promise<readonly ProgramStructure[]> {
+  return buildProgramStructures(repository);
+}
 
-  return repository.getPrograms().map((program) => ({
+async function buildProgramStructures(
+  repository: EducationContentRepository,
+): Promise<readonly ProgramStructure[]> {
+  const questions = await repository.getQuestions();
+  const themes = await repository.getThemes();
+  const blocks = await repository.getBlocks();
+
+  const programs = await repository.getPrograms();
+
+  return programs.map((program) => ({
     program,
     questions: questions
       .filter((question) => question.programId === program.id)

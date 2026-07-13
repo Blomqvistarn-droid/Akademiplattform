@@ -1,11 +1,8 @@
+import { getEducationProgramStructures } from "@/application/services/academyReadService";
 import { Header } from "@/components/Header";
-import { getProgramStructures } from "@/domains/academy/queries/getProgramStructures";
-import { localEducationContentRepository } from "@/infrastructure/repositories/local/localEducationContentRepository";
 
-export default function EducationPage() {
-  const programStructures = getProgramStructures(
-    localEducationContentRepository,
-  );
+export default async function EducationPage() {
+  const programStructures = await getEducationProgramStructures();
 
   return <><Header eyebrow="Cirka 30 månader" title="Utbildningsplan" />
     <p className="lead">Utbildningen återkommer i en spiral: förstå, lösa under press och känna igen i match.</p>

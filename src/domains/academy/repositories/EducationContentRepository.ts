@@ -14,16 +14,16 @@ import type {
 } from "@/domains/academy/types/ids";
 
 export interface EducationContentRepository {
-  getPrograms(): readonly EducationProgram[];
-  getProgram(id: ProgramId): EducationProgram | null;
-  getQuestions(): readonly LearningQuestion[];
-  getQuestion(id: LearningQuestionId): LearningQuestion | null;
-  getThemes(): readonly Theme[];
-  getTheme(id: ThemeId): Theme | null;
-  getBlocks(): readonly EducationBlock[];
-  getBlock(id: EducationBlockId): EducationBlock | null;
-  getSessionTemplates(): readonly SessionTemplate[];
-  getSessionTemplate(id: SessionTemplateId): SessionTemplate | null;
-  getExercises(): readonly Exercise[];
-  getExercise(id: ExerciseId): Exercise | null;
+  getPrograms(): Promise<readonly EducationProgram[]>;
+  getProgram(id: ProgramId): Promise<EducationProgram | null>;
+  getQuestions(): Promise<readonly LearningQuestion[]>;
+  getQuestion(id: LearningQuestionId): Promise<LearningQuestion | null>;
+  getThemes(): Promise<readonly Theme[]>;
+  getTheme(id: ThemeId): Promise<Theme | null>;
+  getBlocks(): Promise<readonly EducationBlock[]>;
+  getBlock(id: EducationBlockId): Promise<EducationBlock | null>;
+  getSessionTemplates(): Promise<readonly SessionTemplate[]>;
+  getSessionTemplate(id: SessionTemplateId): Promise<SessionTemplate | null>;
+  getExercises(): Promise<readonly Exercise[]>;
+  getExercise(id: ExerciseId): Promise<Exercise | null>;
 }

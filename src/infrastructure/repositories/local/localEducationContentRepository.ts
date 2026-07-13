@@ -7,21 +7,21 @@ const content = academyContent;
 validateEducationContent(content);
 
 export const localEducationContentRepository: EducationContentRepository = {
-  getPrograms: () => content.programs,
-  getProgram: (id) =>
+  getPrograms: async () => content.programs,
+  getProgram: async (id) =>
     content.programs.find((program) => program.id === id) ?? null,
-  getQuestions: () => content.learningQuestions,
-  getQuestion: (id) =>
+  getQuestions: async () => content.learningQuestions,
+  getQuestion: async (id) =>
     content.learningQuestions.find((question) => question.id === id) ?? null,
-  getThemes: () => content.themes,
-  getTheme: (id) => content.themes.find((theme) => theme.id === id) ?? null,
-  getBlocks: () => content.educationBlocks,
-  getBlock: (id) =>
+  getThemes: async () => content.themes,
+  getTheme: async (id) => content.themes.find((theme) => theme.id === id) ?? null,
+  getBlocks: async () => content.educationBlocks,
+  getBlock: async (id) =>
     content.educationBlocks.find((block) => block.id === id) ?? null,
-  getSessionTemplates: () => content.sessionTemplates,
-  getSessionTemplate: (id) =>
+  getSessionTemplates: async () => content.sessionTemplates,
+  getSessionTemplate: async (id) =>
     content.sessionTemplates.find((session) => session.id === id) ?? null,
-  getExercises: () => content.exercises,
-  getExercise: (id) =>
+  getExercises: async () => content.exercises,
+  getExercise: async (id) =>
     content.exercises.find((exercise) => exercise.id === id) ?? null,
 };

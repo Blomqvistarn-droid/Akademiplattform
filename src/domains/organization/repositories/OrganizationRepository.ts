@@ -9,11 +9,11 @@ import type {
 } from "@/domains/shared/types/ids";
 
 export interface OrganizationRepository {
-  getOrganizations(): readonly Organization[];
-  getOrganization(id: OrganizationId): Organization | null;
-  getTeams(): readonly Team[];
-  getTeam(id: TeamId): Team | null;
-  getUser(id: UserId): User | null;
-  getMembershipsByTeam(teamId: TeamId): readonly TeamMembership[];
-  getMembershipsByUser(userId: UserId): readonly TeamMembership[];
+  getOrganizations(): Promise<readonly Organization[]>;
+  getOrganization(id: OrganizationId): Promise<Organization | null>;
+  getTeams(): Promise<readonly Team[]>;
+  getTeam(id: TeamId): Promise<Team | null>;
+  getUser(id: UserId): Promise<User | null>;
+  getMembershipsByTeam(teamId: TeamId): Promise<readonly TeamMembership[]>;
+  getMembershipsByUser(userId: UserId): Promise<readonly TeamMembership[]>;
 }

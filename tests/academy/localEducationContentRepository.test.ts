@@ -11,8 +11,8 @@ import {
 } from "../../src/domains/academy/types/ids";
 import { localEducationContentRepository as repository } from "../../src/infrastructure/repositories/local/localEducationContentRepository";
 
-test("getPrograms returns all programs in source order", () => {
-  const programs = repository.getPrograms();
+test("getPrograms returns all programs in source order", async () => {
+  const programs = await repository.getPrograms();
 
   assert.equal(programs.length, academyContent.programs.length);
   assert.equal(programs, academyContent.programs);
@@ -22,18 +22,18 @@ test("getPrograms returns all programs in source order", () => {
   );
 });
 
-test("getProgram resolves an existing program by ID", () => {
+test("getProgram resolves an existing program by ID", async () => {
   const firstProgram = academyContent.programs[0];
 
-  assert.equal(repository.getProgram(firstProgram.id), firstProgram);
+  assert.equal(await repository.getProgram(firstProgram.id), firstProgram);
 });
 
-test("getProgram returns null for unknown ID", () => {
-  assert.equal(repository.getProgram(toProgramId("missing-program")), null);
+test("getProgram returns null for unknown ID", async () => {
+  assert.equal(await repository.getProgram(toProgramId("missing-program")), null);
 });
 
-test("getQuestions returns all questions in source order", () => {
-  const questions = repository.getQuestions();
+test("getQuestions returns all questions in source order", async () => {
+  const questions = await repository.getQuestions();
 
   assert.equal(questions.length, academyContent.learningQuestions.length);
   assert.equal(questions, academyContent.learningQuestions);
@@ -43,18 +43,18 @@ test("getQuestions returns all questions in source order", () => {
   );
 });
 
-test("getQuestion resolves an existing question by ID", () => {
+test("getQuestion resolves an existing question by ID", async () => {
   const firstQuestion = academyContent.learningQuestions[0];
 
-  assert.equal(repository.getQuestion(firstQuestion.id), firstQuestion);
+  assert.equal(await repository.getQuestion(firstQuestion.id), firstQuestion);
 });
 
-test("getQuestion returns null for unknown ID", () => {
-  assert.equal(repository.getQuestion(toLearningQuestionId("missing-question")), null);
+test("getQuestion returns null for unknown ID", async () => {
+  assert.equal(await repository.getQuestion(toLearningQuestionId("missing-question")), null);
 });
 
-test("getThemes returns all themes in source order", () => {
-  const themes = repository.getThemes();
+test("getThemes returns all themes in source order", async () => {
+  const themes = await repository.getThemes();
 
   assert.equal(themes.length, academyContent.themes.length);
   assert.equal(themes, academyContent.themes);
@@ -64,18 +64,18 @@ test("getThemes returns all themes in source order", () => {
   );
 });
 
-test("getTheme resolves an existing theme by ID", () => {
+test("getTheme resolves an existing theme by ID", async () => {
   const firstTheme = academyContent.themes[0];
 
-  assert.equal(repository.getTheme(firstTheme.id), firstTheme);
+  assert.equal(await repository.getTheme(firstTheme.id), firstTheme);
 });
 
-test("getTheme returns null for unknown ID", () => {
-  assert.equal(repository.getTheme(toThemeId("missing-theme")), null);
+test("getTheme returns null for unknown ID", async () => {
+  assert.equal(await repository.getTheme(toThemeId("missing-theme")), null);
 });
 
-test("getBlocks returns all blocks in source order", () => {
-  const blocks = repository.getBlocks();
+test("getBlocks returns all blocks in source order", async () => {
+  const blocks = await repository.getBlocks();
 
   assert.equal(blocks.length, academyContent.educationBlocks.length);
   assert.equal(blocks, academyContent.educationBlocks);
@@ -85,18 +85,18 @@ test("getBlocks returns all blocks in source order", () => {
   );
 });
 
-test("getBlock resolves an existing block by ID", () => {
+test("getBlock resolves an existing block by ID", async () => {
   const firstBlock = academyContent.educationBlocks[0];
 
-  assert.equal(repository.getBlock(firstBlock.id), firstBlock);
+  assert.equal(await repository.getBlock(firstBlock.id), firstBlock);
 });
 
-test("getBlock returns null for unknown ID", () => {
-  assert.equal(repository.getBlock(toEducationBlockId("missing-block")), null);
+test("getBlock returns null for unknown ID", async () => {
+  assert.equal(await repository.getBlock(toEducationBlockId("missing-block")), null);
 });
 
-test("getSessionTemplates returns all session templates in source order", () => {
-  const sessionTemplates = repository.getSessionTemplates();
+test("getSessionTemplates returns all session templates in source order", async () => {
+  const sessionTemplates = await repository.getSessionTemplates();
 
   assert.equal(sessionTemplates.length, academyContent.sessionTemplates.length);
   assert.equal(sessionTemplates, academyContent.sessionTemplates);
@@ -106,24 +106,24 @@ test("getSessionTemplates returns all session templates in source order", () => 
   );
 });
 
-test("getSessionTemplate resolves an existing session template by ID", () => {
+test("getSessionTemplate resolves an existing session template by ID", async () => {
   const firstSessionTemplate = academyContent.sessionTemplates[0];
 
   assert.equal(
-    repository.getSessionTemplate(firstSessionTemplate.id),
+    await repository.getSessionTemplate(firstSessionTemplate.id),
     firstSessionTemplate,
   );
 });
 
-test("getSessionTemplate returns null for unknown ID", () => {
+test("getSessionTemplate returns null for unknown ID", async () => {
   assert.equal(
-    repository.getSessionTemplate(toSessionTemplateId("missing-session")),
+    await repository.getSessionTemplate(toSessionTemplateId("missing-session")),
     null,
   );
 });
 
-test("getExercises returns all exercises in source order", () => {
-  const exercises = repository.getExercises();
+test("getExercises returns all exercises in source order", async () => {
+  const exercises = await repository.getExercises();
 
   assert.equal(exercises.length, academyContent.exercises.length);
   assert.equal(exercises, academyContent.exercises);
@@ -133,69 +133,69 @@ test("getExercises returns all exercises in source order", () => {
   );
 });
 
-test("getExercise resolves an existing exercise by ID", () => {
+test("getExercise resolves an existing exercise by ID", async () => {
   const firstExercise = academyContent.exercises[0];
 
-  assert.equal(repository.getExercise(firstExercise.id), firstExercise);
+  assert.equal(await repository.getExercise(firstExercise.id), firstExercise);
 });
 
-test("getExercise returns null for unknown ID", () => {
-  assert.equal(repository.getExercise(toExerciseId("missing-exercise")), null);
+test("getExercise returns null for unknown ID", async () => {
+  assert.equal(await repository.getExercise(toExerciseId("missing-exercise")), null);
 });
 
-test("repository exposes the exact same aggregate counts as academyContent", () => {
-  assert.equal(repository.getPrograms().length, academyContent.programs.length);
+test("repository exposes the exact same aggregate counts as academyContent", async () => {
+  assert.equal((await repository.getPrograms()).length, academyContent.programs.length);
   assert.equal(
-    repository.getQuestions().length,
+    (await repository.getQuestions()).length,
     academyContent.learningQuestions.length,
   );
-  assert.equal(repository.getThemes().length, academyContent.themes.length);
+  assert.equal((await repository.getThemes()).length, academyContent.themes.length);
   assert.equal(
-    repository.getBlocks().length,
+    (await repository.getBlocks()).length,
     academyContent.educationBlocks.length,
   );
   assert.equal(
-    repository.getSessionTemplates().length,
+    (await repository.getSessionTemplates()).length,
     academyContent.sessionTemplates.length,
   );
   assert.equal(
-    repository.getExercises().length,
+    (await repository.getExercises()).length,
     academyContent.exercises.length,
   );
 });
 
-test("repository lookup methods resolve every ID present in academyContent", () => {
+test("repository lookup methods resolve every ID present in academyContent", async () => {
   for (const program of academyContent.programs) {
-    assert.equal(repository.getProgram(program.id), program);
+    assert.equal(await repository.getProgram(program.id), program);
   }
 
   for (const question of academyContent.learningQuestions) {
-    assert.equal(repository.getQuestion(question.id), question);
+    assert.equal(await repository.getQuestion(question.id), question);
   }
 
   for (const theme of academyContent.themes) {
-    assert.equal(repository.getTheme(theme.id), theme);
+    assert.equal(await repository.getTheme(theme.id), theme);
   }
 
   for (const block of academyContent.educationBlocks) {
-    assert.equal(repository.getBlock(block.id), block);
+    assert.equal(await repository.getBlock(block.id), block);
   }
 
   for (const sessionTemplate of academyContent.sessionTemplates) {
     assert.equal(
-      repository.getSessionTemplate(sessionTemplate.id),
+      await repository.getSessionTemplate(sessionTemplate.id),
       sessionTemplate,
     );
   }
 
   for (const exercise of academyContent.exercises) {
-    assert.equal(repository.getExercise(exercise.id), exercise);
+    assert.equal(await repository.getExercise(exercise.id), exercise);
   }
 });
 
-function assertReadonlyRepositoryCollections(): void {
-  const programs = repository.getPrograms();
-  const questions = repository.getQuestions();
+async function assertReadonlyRepositoryCollections(): Promise<void> {
+  const programs = await repository.getPrograms();
+  const questions = await repository.getQuestions();
 
   // @ts-expect-error Repository collections are readonly.
   programs.push(academyContent.programs[0]);

@@ -7,11 +7,11 @@ import type {
 } from "@/domains/shared/types/ids";
 
 export interface TrainingRepository {
-  getScheduledSessions(): readonly ScheduledSession[];
-  getScheduledSession(id: ScheduledSessionId): ScheduledSession | null;
-  getReflectionsByTeam(teamId: TeamId): readonly SessionReflection[];
+  getScheduledSessions(): Promise<readonly ScheduledSession[]>;
+  getScheduledSession(id: ScheduledSessionId): Promise<ScheduledSession | null>;
+  getReflectionsByTeam(teamId: TeamId): Promise<readonly SessionReflection[]>;
   getReflectionsByScheduledSession(
     scheduledSessionId: ScheduledSessionId,
-  ): readonly SessionReflection[];
-  getProgressByTeam(teamId: TeamId): readonly TeamProgress[];
+  ): Promise<readonly SessionReflection[]>;
+  getProgressByTeam(teamId: TeamId): Promise<readonly TeamProgress[]>;
 }
