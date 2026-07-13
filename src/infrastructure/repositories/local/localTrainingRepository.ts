@@ -46,6 +46,8 @@ const TRAINING_DATA: readonly ScopedTrainingData[] = [
         id: "00000000-0000-0000-0000-000000002001",
         scheduledSessionId: "00000000-0000-0000-0000-000000001002",
         authorId: "00000000-0000-0000-0000-000000000201",
+        understandingScore: 4,
+        independenceScore: 3,
         notes: "Bra progression i overlagsspelet.",
         createdAt: "2026-08-12T19:05:00.000Z",
       },
@@ -184,5 +186,21 @@ export function createLocalTrainingRepository(
       session.status = "cancelled";
       return session;
     },
+    createReflection: async (input) => {
+      const created: SessionReflection = {
+        id: input.id,
+        scheduledSessionId: input.scheduledSessionId,
+        authorId: input.authorId,
+        understandingScore: input.understandingScore,
+        independenceScore: input.independenceScore,
+        notes: input.notes,
+        createdAt: input.createdAt,
+      };
+
+      scoped.reflections.push(created);
+      return created;
+    },
+    getReflection: async (id) =>
+      scoped.reflections.find((reflection) => reflection.id === id) ?? null,
   };
 }

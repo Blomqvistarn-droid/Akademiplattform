@@ -55,6 +55,10 @@ function createInMemoryTrainingRepository(): TrainingRepository {
       existing.status = "cancelled";
       return existing;
     },
+    createReflection: async () => {
+      throw new Error("Not used in training handler tests.");
+    },
+    getReflection: async () => null,
   };
 }
 

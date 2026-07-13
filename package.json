@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test": "tsc -p tsconfig.test.json && node --test --test-concurrency=1 dist/test/tests/**/*.test.js",
-    "test:integration": "node --test dist/test/tests/integration/**/*.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test --test-concurrency=1 dist/test/tests/academy/**/*.test.js dist/test/tests/application/**/*.test.js dist/test/tests/contracts/**/*.test.js dist/test/tests/transactions/**/*.test.js dist/test/tests/migrations/**/*.test.js",
+    "test:integration": "node --test --test-concurrency=1 dist/test/tests/integration/**/*.test.js",
     "start": "next start",
     "lint": "next lint",
     "db:migrate:up": "node-pg-migrate up --migrations-dir migrations --ts false",

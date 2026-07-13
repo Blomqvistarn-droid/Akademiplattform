@@ -29,6 +29,8 @@ function mapSessionReflection(row: QueryRow): SessionReflection {
     id: String(row.id),
     scheduledSessionId: String(row.scheduled_session_id),
     authorId: String(row.author_id),
+    understandingScore: Number(row.understanding_score),
+    independenceScore: Number(row.independence_score),
     notes: String(row.notes),
     createdAt: new Date(String(row.created_at)).toISOString(),
   };
@@ -87,7 +89,7 @@ export function createPostgresTrainingRepository(
       const result = await queryWithTransactionClient(
         pool,
         `
-          SELECT r.id, r.scheduled_session_id, r.author_id, r.notes, r.created_at
+          SELECT r.id, r.scheduled_session_id, r.author_id, r.understanding_score, r.independence_score, r.notes, r.created_at
           FROM session_reflection r
           INNER JOIN scheduled_session s
             ON s.id = r.scheduled_session_id
@@ -105,7 +107,7 @@ export function createPostgresTrainingRepository(
       const result = await queryWithTransactionClient(
         pool,
         `
-          SELECT id, scheduled_session_id, author_id, notes, created_at
+          SELECT id, scheduled_session_id, author_id, understanding_score, independence_score, notes, created_at
           FROM session_reflection
           WHERE organization_id = $1
             AND scheduled_session_id = $2
@@ -220,6 +222,56 @@ export function createPostgresTrainingRepository(
       }
 
       return mapScheduledSession(result.rows[0]);
+    },
+    createReflection: async (input) => {
+      const result = await queryWithTransactionClient(
+        pool,
+        `
+          INSERT INTO session_reflection (
+            id,
+            organization_id,
+            scheduled_session_id,
+            author_id,
+            understanding_score,
+            independence_score,
+            notes,
+            created_at
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          RETURNING id, scheduled_session_id, author_id, understanding_score, independence_score, notes, created_at
+        `,
+        [
+          input.id,
+          organizationContext.organizationId,
+          input.scheduledSessionId,
+          input.authorId,
+          input.understandingScore,
+          input.independenceScore,
+          input.notes,
+          input.createdAt,
+        ],
+      );
+
+      return mapSessionReflection(result.rows[0]);
+    },
+    getReflection: async (id) => {
+      const result = await queryWithTransactionClient(
+        pool,
+        `
+          SELECT id, scheduled_session_id, author_id, understanding_score, independence_score, notes, created_at
+          FROM session_reflection
+          WHERE organization_id = $1
+            AND id = $2
+          LIMIT 1
+        `,
+        [organizationContext.organizationId, id],
+      );
+
+      if (result.rowCount === 0) {
+        return null;
+      }
+
+      return mapSessionReflection(result.rows[0]);
     },
   };
 }

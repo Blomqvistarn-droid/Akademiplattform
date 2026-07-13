@@ -47,8 +47,13 @@ export async function createTrainingReferenceSchema(pool: Pool): Promise<void> {
       organization_id uuid NOT NULL REFERENCES organization(id) ON DELETE RESTRICT,
       scheduled_session_id uuid NOT NULL,
       author_id uuid NOT NULL,
+      understanding_score integer NOT NULL,
+      independence_score integer NOT NULL,
       notes text NOT NULL,
       created_at timestamptz NOT NULL,
+      CONSTRAINT session_reflection_understanding_score_check CHECK (understanding_score BETWEEN 1 AND 5),
+      CONSTRAINT session_reflection_independence_score_check CHECK (independence_score BETWEEN 1 AND 5),
+      CONSTRAINT session_reflection_org_session_unique UNIQUE (organization_id, scheduled_session_id),
       CONSTRAINT session_reflection_scheduled_session_fk
         FOREIGN KEY (scheduled_session_id, organization_id)
         REFERENCES scheduled_session(id, organization_id)
@@ -98,9 +103,9 @@ export async function seedTrainingReferenceData(pool: Pool): Promise<void> {
   `);
 
   await pool.query(`
-    INSERT INTO session_reflection (id, organization_id, scheduled_session_id, author_id, notes, created_at)
+    INSERT INTO session_reflection (id, organization_id, scheduled_session_id, author_id, understanding_score, independence_score, notes, created_at)
     VALUES
-      ('00000000-0000-0000-0000-000000002001', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000001002', '00000000-0000-0000-0000-000000000201', 'Bra progression i overlagsspelet.', '2026-08-12T19:05:00.000Z');
+      ('00000000-0000-0000-0000-000000002001', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000001002', '00000000-0000-0000-0000-000000000201', 4, 3, 'Bra progression i overlagsspelet.', '2026-08-12T19:05:00.000Z');
   `);
 
   await pool.query(`

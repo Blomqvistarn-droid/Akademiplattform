@@ -21,6 +21,16 @@ export interface UpdateScheduledSessionInput {
   status?: ScheduledSession["status"];
 }
 
+export interface CreateSessionReflectionInput {
+  id: string;
+  scheduledSessionId: ScheduledSessionId;
+  authorId: string;
+  understandingScore: number;
+  independenceScore: number;
+  notes: string;
+  createdAt: string;
+}
+
 export interface TrainingRepository {
   getScheduledSessions(): Promise<readonly ScheduledSession[]>;
   getScheduledSession(id: ScheduledSessionId): Promise<ScheduledSession | null>;
@@ -37,4 +47,6 @@ export interface TrainingRepository {
     input: UpdateScheduledSessionInput,
   ): Promise<ScheduledSession | null>;
   archiveScheduledSession(id: ScheduledSessionId): Promise<ScheduledSession | null>;
+  createReflection(input: CreateSessionReflectionInput): Promise<SessionReflection>;
+  getReflection(id: string): Promise<SessionReflection | null>;
 }

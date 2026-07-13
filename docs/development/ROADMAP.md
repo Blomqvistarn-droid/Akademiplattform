@@ -70,15 +70,28 @@ Levererat i versionen:
 - PUT /api/trainings/{id}
 - DELETE /api/trainings/{id}
 
-### Version 0.4 – Tränarplattform
+### Version 0.4 – Reflection Foundation
+
+Status: Delvis klar (Sprint 0.4.1 levererad, produktbeslut återstår)
 
 Planerat innehåll:
 
-- Planering av träningspass
-- Kalender
-- Passhistorik
-- Reflektioner
-- Progression
+- Reflektion efter träningspass
+- Förståelsevärde
+- Självständighetsvärde
+- Regelbaserad rekommendation
+- Local Repository + PostgreSQL Repository
+- Grundläggande API för reflections
+- Verifierad end-to-end-vertikal
+
+Levererat i versionen:
+
+- POST /api/reflections
+- GET /api/reflections
+- GET /api/reflections/{id}
+- GET /api/reflections/recommendation
+- Recommendation med pedagogisk motivering, underlag och fallback
+- Reflection-integrationstester för repository och API
 
 ### Version 0.5 – Akademi
 
@@ -122,8 +135,16 @@ Planerat:
 
 Roadmapen är ett levande dokument som uppdateras efter varje sprint och större arkitekturbeslut för att spegla aktuell riktning, prioriteringar och tekniska beslut.
 
-## Verifierad status v0.3
+## Verifierad status
+
+v0.3:
 
 - `npm test`: 62 pass, 0 fail
 - `npm run test:integration`: 7 pass, 0 fail
+- `npm run build`: passerar
+
+v0.4 (senaste verifiering):
+
+- `npm test`: 63 pass, 0 fail
+- `npm run test:integration`: 11 pass, 0 fail
 - `npm run build`: passerar

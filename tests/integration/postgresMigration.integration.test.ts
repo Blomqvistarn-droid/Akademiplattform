@@ -119,3 +119,55 @@ test("postgres integration: rejects cross-organization scheduled session relatio
     }
   });
 });
+
+test("postgres integration: reflection score columns and constraints exist in training schema", async () => {
+  if (!hasTestDatabase()) {
+    return;
+  }
+
+  await withIsolatedPostgresSchema(async (db) => {
+    const pool = createSchemaScopedPool(db);
+
+    try {
+      await createTrainingReferenceSchema(pool);
+
+      const columnsResult = await pool.query(
+        `
+          SELECT column_name
+          FROM information_schema.columns
+          WHERE table_schema = current_schema()
+            AND table_name = 'session_reflection'
+            AND column_name IN ('understanding_score', 'independence_score')
+          ORDER BY column_name
+        `,
+      );
+
+      assert.deepEqual(
+        columnsResult.rows.map((row) => row.column_name),
+        ["independence_score", "understanding_score"],
+      );
+
+      const checkConstraints = await pool.query(
+        `
+          SELECT conname
+          FROM pg_constraint
+          WHERE conname IN (
+            'session_reflection_understanding_score_check',
+            'session_reflection_independence_score_check'
+          )
+          ORDER BY conname
+        `,
+      );
+
+      assert.deepEqual(
+        checkConstraints.rows.map((row) => row.conname),
+        [
+          "session_reflection_independence_score_check",
+          "session_reflection_understanding_score_check",
+        ],
+      );
+    } finally {
+      await pool.end();
+    }
+  });
+});
