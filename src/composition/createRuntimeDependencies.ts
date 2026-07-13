@@ -1,6 +1,7 @@
 import type { OrganizationContext } from "../application/context/OrganizationContext";
 import type { TransactionRunner } from "../application/transactions/TransactionRunner";
 import type { EducationContentRepository } from "../domains/academy/repositories/EducationContentRepository";
+import type { EducationPlanRepository } from "../domains/educationPlan/repositories/EducationPlanRepository";
 import type { TrainingRepository } from "../domains/training/repositories/TrainingRepository";
 import { readOrganizationContextFromEnv } from "../infrastructure/config/organizationContext";
 import {
@@ -12,6 +13,7 @@ import {
 } from "../infrastructure/repositories/database/postgresEducationContentRepository";
 import { createPostgresTrainingRepository } from "../infrastructure/repositories/database/postgresTrainingRepository";
 import { localEducationContentRepository } from "../infrastructure/repositories/local/localEducationContentRepository";
+import { createLocalEducationPlanRepository } from "../infrastructure/repositories/local/localEducationPlanRepository";
 import { createLocalTrainingRepository } from "../infrastructure/repositories/local/localTrainingRepository";
 import { getPostgresPool } from "../infrastructure/persistence/postgres/postgresPool";
 import { InMemoryTransactionRunner } from "../infrastructure/transactions/InMemoryTransactionRunner";
@@ -21,6 +23,7 @@ export interface RuntimeDependencies {
   provider: RepositoryProvider;
   organizationContext: OrganizationContext;
   educationContentRepository: EducationContentRepository;
+  educationPlanRepository: EducationPlanRepository;
   trainingRepository: TrainingRepository;
   transactionRunner: TransactionRunner;
 }
@@ -36,6 +39,7 @@ export function createRuntimeDependencies(
       provider,
       organizationContext,
       educationContentRepository: localEducationContentRepository,
+      educationPlanRepository: createLocalEducationPlanRepository(organizationContext),
       trainingRepository: createLocalTrainingRepository(organizationContext),
       transactionRunner: new InMemoryTransactionRunner(),
     };
@@ -51,6 +55,7 @@ export function createRuntimeDependencies(
         organizationContext,
         pool,
       }),
+      educationPlanRepository: createLocalEducationPlanRepository(organizationContext),
       trainingRepository: createPostgresTrainingRepository({
         organizationContext,
         pool,
