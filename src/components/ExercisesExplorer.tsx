@@ -10,15 +10,31 @@ interface ExercisesExplorerProps {
 
 export function ExercisesExplorer({ exercises }: ExercisesExplorerProps) {
   const [query, setQuery] = useState("");
+  const [activityTypeFilter, setActivityTypeFilter] = useState("alla");
+
+  const activityTypes = useMemo(
+    () => [
+      "alla",
+      ...Array.from(
+        new Set(exercises.map((exercise) => exercise.activityType.toLowerCase())),
+      ),
+    ],
+    [exercises],
+  );
 
   const filtered = useMemo(
     () =>
-      exercises.filter((exercise) =>
-        `${exercise.title} ${exercise.tags.join(" ")}`
+      exercises.filter((exercise) => {
+        const matchesQuery = `${exercise.title} ${exercise.purpose} ${exercise.activityType} ${exercise.tags.join(" ")}`
           .toLowerCase()
-          .includes(query.toLowerCase()),
-      ),
-    [exercises, query],
+          .includes(query.toLowerCase());
+        const matchesType =
+          activityTypeFilter === "alla" ||
+          exercise.activityType.toLowerCase() === activityTypeFilter;
+
+        return matchesQuery && matchesType;
+      }),
+    [activityTypeFilter, exercises, query],
   );
 
   return (
@@ -29,10 +45,24 @@ export function ExercisesExplorer({ exercises }: ExercisesExplorerProps) {
       <input
         id="exercise-search"
         className="search"
-        placeholder="Sok pa ovning, numerar eller princip"
+        placeholder="Sok pa ovning, syfte, tagg eller aktivitet"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
+      <label htmlFor="exercise-activity-type" className="srOnly">
+        Filtrera pa aktivitetstyp
+      </label>
+      <select
+        id="exercise-activity-type"
+        value={activityTypeFilter}
+        onChange={(event) => setActivityTypeFilter(event.target.value)}
+      >
+        {activityTypes.map((activityType) => (
+          <option key={activityType} value={activityType}>
+            {activityType === "alla" ? "Alla aktivitetstyper" : activityType}
+          </option>
+        ))}
+      </select>
       <p className="eyebrow" aria-live="polite">
         {filtered.length} ovningar visas
       </p>

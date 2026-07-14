@@ -4,15 +4,33 @@ Datum: 2026-07-14
 
 ## Status
 
-Detta dokument beskriver rekommenderad inriktning för Sprint 0.8.
+Detta dokument beskriver inriktning och slutlig leveransstatus for Sprint 0.8.
 
 - 0.7 är avslutad med verifierad data parity och kvalitetsgrind
-- sprint 0.8 är planerad och ej implementerad
+- Sprint 0.8 ar avslutad och klar
 - fokus flyttas från teknisk hårdning till produktnytta i utbildningsflödet
+
+Forsta leverans i sprinten:
+
+- klickbar huvudresa Program -> Huvudfraga -> Tema -> Block -> Pass under Utbildning
+- blockniva som visar kopplade pass och leder vidare till passdetalj
+- ovningsbank med utokad sokning och aktivitetstypfilter
+- verifierat med grona kvalitetsgrindar: lint, test, build
+
+Relaterad leveranslogg:
+
+- se CHANGELOG_0.8.md for detaljerad andrings- och verifieringslogg
+
+Formell stangning:
+
+- Sprint 0.8 stangs efter verifierad DoD-avstamning
+- kvalitetsgrind passerar: lint, test, test:integration, build
 
 ## Sammanfattning
 
 Sprint 0.8 ska leverera tydlig användarnytta i tränarens planerings- och genomförandeflöde, byggt på den stabila grund som säkrades i 0.7.
+
+Sprinten ska inte introducera någon ny huvuddomän, utan bygga vidare på befintliga domänmodeller, use cases och repositories.
 
 Målet är att göra innehållsmodellen mer komplett i produkten:
 
@@ -25,14 +43,19 @@ Målet är att göra innehållsmodellen mer komplett i produkten:
 
 Sprinten ska samtidigt behålla den verifieringsdisciplin som etablerades i 0.7.
 
+Primär användarresa i sprinten:
+
+- Program -> Huvudfråga -> Tema -> Block -> Pass
+
 ## Målbild för Sprint 0.8
 
 Efter sprinten ska tränaren kunna:
 
-- navigera tydligt från program till tema, block och pass
+- navigera tydligt från Program till Huvudfråga, Tema, Block och Pass
 - hitta och välja övningar via förbättrad filtrering och sök
 - starta planering och genomförande utan manuella workaround
-- fortsätta använda reflektion och recommendation i ett sammanhängande flöde
+- fortsätta använda reflektion och recommendation i ett sammanhängande coachflöde
+- göra ovanstående effektivt i mobilupplevelsen
 
 ## Problem som Sprint 0.8 ska lösa
 
@@ -66,8 +89,9 @@ Konsekvens:
 
 Ingår:
 
-- programöversikt med tydlig väg till huvudfråga, tema, block och pass
+- fullt navigerbar kedja Program -> Huvudfråga -> Tema -> Block -> Pass
 - förbättrad övningsbank med filtrering och sök för planeringsflöden
+- återanvändning av befintliga domänmodeller, use cases och repositories
 - bevarad koppling till Education Plan och recommendation-flödet
 - fortsatt mobil först i kärnvyer
 - verifiering av regressionsfri coachkedja
@@ -82,13 +106,13 @@ Ingår inte:
 
 ## Prioriterad ändringsordning
 
-### P1 - Program till pass i produktflödet
+### P1 - Program till pass via huvudfråga i produktflödet
 
 Mål:
-- göra innehållshierarkin konkret och navigerbar i appen
+- göra innehållshierarkin Program -> Huvudfråga -> Tema -> Block -> Pass konkret och navigerbar i appen
 
 Förväntat resultat:
-- tränaren kan gå från program till pass utan manuella sidospår
+- tränaren kan gå från Program till Pass utan manuella sidospår
 
 ### P2 - Övningsbank och planeringssök
 
@@ -131,26 +155,30 @@ Databasspecifik verifiering:
 
 Manuellt:
 
-- program -> tema -> block -> pass i mobil vy
+- Program -> Huvudfråga -> Tema -> Block -> Pass i mobil vy
 - övningssök och filtrering i planeringsscenario
-- kärnflöde med reflektion och recommendation
+- kärnflöde med reflektion och recommendation utan regressionsfel
 
 ## Success Metrics
 
-- tränaren kan navigera program -> tema -> block -> pass utan avbrott
+- tränaren kan navigera Program -> Huvudfråga -> Tema -> Block -> Pass utan avbrott
 - planeringssök minskar antalet manuella steg för att hitta passinnehåll
 - kritiska coachflöden passerar verifiering utan regressionsfel
 - lint, test och build är gröna i sprintens slutverifiering
+- mobilupplevelsen för kärnresan är verifierad i relevanta vyer
 
 ## Definition of Done
 
 Sprint 0.8 är klar när:
 
 1. Program, tema, block och pass är sammanhängande i produktflödet.
-2. Övningsbankens filtrering och sök stödjer planeringsfall enligt sprintscope.
-3. Coachflödets kritiska kedja är fortsatt verifierad utan regression.
-4. Lint, test och build passerar utan interaktivitet.
-5. Dokumentation är uppdaterad med levererat scope, verifieringsutfall och kända begränsningar.
+2. Primär användarresa Program -> Huvudfråga -> Tema -> Block -> Pass är fullt navigerbar.
+3. Övningsbankens filtrering och sök stödjer planeringsfall enligt sprintscope.
+4. Befintliga domänmodeller, use cases och repositories har återanvänts utan ny huvuddomän.
+5. Kopplingen till Education Plan och Coach Flow är bibehållen.
+6. Coachflödets kritiska kedja är fortsatt verifierad utan regression.
+7. Lint, test och build passerar utan interaktivitet.
+8. Dokumentation är uppdaterad med levererat scope, verifieringsutfall och kända begränsningar.
 
 ## Risker
 
@@ -158,7 +186,7 @@ Sprint 0.8 är klar när:
 2. Ny planeringsfunktionalitet kan påverka befintlig coachkedja utan tydlig regressionstäckning.
 3. Innehållskvalitet kan bli ojämn om modellutökning sker snabbare än validering.
 
-## Rekommenderat produktbeslut före implementation
+## Faststallda produktbeslut
 
 1. Sprint 0.8 prioriterar produktnytta i innehålls- och planeringsflödet.
 2. Coachkedjans verifieringsnivå från 0.7 ska bibehållas.

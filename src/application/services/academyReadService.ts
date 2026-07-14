@@ -1,7 +1,11 @@
 import type { Exercise } from "../../domains/academy/entities/Exercise";
 import type { SessionTemplate } from "../../domains/academy/entities/SessionTemplate";
 import { getProgramStructures } from "../../domains/academy/queries/getProgramStructures";
-import { toExerciseId, toSessionTemplateId } from "../../domains/academy/types/ids";
+import {
+  toEducationBlockId,
+  toExerciseId,
+  toSessionTemplateId,
+} from "../../domains/academy/types/ids";
 import { createRuntimeDependencies } from "../../composition/createRuntimeDependencies";
 
 export interface SessionDetailData {
@@ -26,6 +30,73 @@ export async function getHomeSession() {
 export async function getEducationProgramStructures() {
   const repository = getEducationContentRepository();
   return getProgramStructures(repository);
+}
+
+export async function getProgramStructureByProgramId(programId: string) {
+  const repository = getEducationContentRepository();
+  const structures = await getProgramStructures(repository);
+  return structures.find(({ program }) => String(program.id) === programId) ?? null;
+}
+
+export async function getQuestionStructure(
+  programId: string,
+  questionId: string,
+) {
+  const programStructure = await getProgramStructureByProgramId(programId);
+  if (!programStructure) {
+    return null;
+  }
+
+  const questionStructure =
+    programStructure.questions.find(
+      ({ question }) => String(question.id) === questionId,
+    ) ?? null;
+
+  if (!questionStructure) {
+    return null;
+  }
+
+  return {
+    program: programStructure.program,
+    questionStructure,
+  };
+}
+
+export async function getThemeStructure(
+  programId: string,
+  questionId: string,
+  themeId: string,
+) {
+  const questionResult = await getQuestionStructure(programId, questionId);
+  if (!questionResult) {
+    return null;
+  }
+
+  const themeStructure =
+    questionResult.questionStructure.themes.find(
+      ({ theme }) => String(theme.id) === themeId,
+    ) ?? null;
+
+  if (!themeStructure) {
+    return null;
+  }
+
+  return {
+    program: questionResult.program,
+    question: questionResult.questionStructure.question,
+    themeStructure,
+  };
+}
+
+export async function getBlockById(blockId: string) {
+  const repository = getEducationContentRepository();
+  return repository.getBlock(toEducationBlockId(blockId));
+}
+
+export async function getSessionsByBlockId(blockId: string) {
+  const repository = getEducationContentRepository();
+  const sessions = await repository.getSessionTemplates();
+  return sessions.filter((session) => String(session.blockId) === blockId);
 }
 
 export async function getSessionTemplates() {

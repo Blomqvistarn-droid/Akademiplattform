@@ -64,6 +64,26 @@ body {
 	margin-top: -6px;
 }
 
+.breadcrumbs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 12px;
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--muted);
+}
+
+.breadcrumbs a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.breadcrumbs .separator {
+	margin: 0 6px;
+	color: #9ba59d;
+}
+
 .heroCard,
 .card,
 .stateCard {

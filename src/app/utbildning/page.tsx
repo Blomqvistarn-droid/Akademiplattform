@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getEducationProgramStructures } from "@/application/services/academyReadService";
 import { Header } from "@/components/Header";
 
@@ -19,23 +20,20 @@ export default async function EducationPage() {
           </section>
         ) : (
           <div className="stack">
-            {programStructures.map(({ questions }) =>
-              questions.map(({ question, themes }) => (
-                <section className="card" key={question.id}>
-                  <p className="eyebrow">{question.id}</p>
-                  <h2>{question.title}</h2>
-                  <p>{question.description}</p>
-                  {themes.map(({ blocks }) =>
-                    blocks.map((block) => (
-                      <div className="blockRow" key={block.id}>
-                        <span>Nivå {block.level}</span>
-                        <strong>{block.title}</strong>
-                      </div>
-                    )),
-                  )}
-                </section>
-              )),
-            )}
+            {programStructures.map(({ program, questions }) => (
+              <Link
+                className="card linkCard"
+                href={`/utbildning/program/${program.id}`}
+                key={program.id}
+              >
+                <p className="eyebrow">Program</p>
+                <h2>{program.title}</h2>
+                <p>{program.description || "Starta din resa via huvudfragorna."}</p>
+                <div className="meta">
+                  <span>{questions.length} huvudfragor</span>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </>

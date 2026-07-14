@@ -162,14 +162,16 @@ Levererat innehåll:
 
 ### Version 0.8 - Program & Content Expansion
 
-Status: Planerad
+Status: Klar
 
-Planerat innehåll:
+Levererat innehåll:
 
-- tydlig produktväg från program till tema, block och pass
-- förbättrad övningsbank med filtrering och sök för planeringsflödet
-- sammanhållen koppling mellan planering, genomförande och recommendation
-- bibehållen kvalitetsgrind och regressionsverifiering av kritisk coachkedja
+- klickbar huvudresa Program -> Huvudfraga -> Tema -> Block -> Pass under Utbildning
+- blockniva med kopplade pass och direktvag till passdetalj
+- ovningsbank med utokad sokning och aktivitetstypfilter
+- breadcrumb-navigering i utbildningsresan inklusive passdetalj
+- regressionstester for programresan och fortsatt gron kvalitetsgrind
+- verifierad coachkedja i integrationskornig utan regressionsutfall
 
 ### Version 1.0
 
@@ -237,3 +239,10 @@ v0.7 (senaste verifiering):
 - `npm run lint`: pass, 0 warnings, 0 errors
 - `npm test`: 84 pass, 0 fail, 0 skip
 - `npm run build`: passerar
+
+v0.8 (senaste verifiering):
+
+- `npm run lint`: pass
+- `npm test`: 86 pass, 0 fail
+- `npm run test:integration`: 13 pass, 0 fail, 0 skip
+- `npm run build`: pass
