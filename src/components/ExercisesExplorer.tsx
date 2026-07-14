@@ -23,12 +23,34 @@ export function ExercisesExplorer({ exercises }: ExercisesExplorerProps) {
 
   return (
     <>
+      <label htmlFor="exercise-search" className="srOnly">
+        Sok ovning
+      </label>
       <input
+        id="exercise-search"
         className="search"
         placeholder="Sok pa ovning, numerar eller princip"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
+      <p className="eyebrow" aria-live="polite">
+        {filtered.length} ovningar visas
+      </p>
+
+      {exercises.length === 0 ? (
+        <section className="stateCard stateEmpty" aria-live="polite">
+          <h2>Inga ovningar tillgangliga</h2>
+          <p>Ovningsbanken ar tom i den valda datakallan.</p>
+        </section>
+      ) : null}
+
+      {exercises.length > 0 && filtered.length === 0 ? (
+        <section className="stateCard stateEmpty" aria-live="polite">
+          <h2>Ingen traff</h2>
+          <p>Prova ett annat sokord for att hitta ovningar.</p>
+        </section>
+      ) : null}
+
       <div className="stack">
         {filtered.map((exercise) => (
           <Link

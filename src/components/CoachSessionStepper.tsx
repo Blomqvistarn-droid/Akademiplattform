@@ -29,9 +29,7 @@ export function CoachSessionStepper({
 }: CoachSessionStepperProps) {
   const router = useRouter();
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
-  const [flowState, setFlowState] = useState<StepperFlowState>(
-    scheduledSessionStatus === "completed" ? "reflection" : "session",
-  );
+  const [flowState, setFlowState] = useState<StepperFlowState>("session");
   const [understanding, setUnderstanding] = useState(3);
   const [independence, setIndependence] = useState(3);
   const [notes, setNotes] = useState("");
@@ -39,6 +37,7 @@ export function CoachSessionStepper({
   const [rationale, setRationale] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [recommendation, setRecommendation] = useState<RecommendationDto | null>(null);
   const [savedDecisionSummary, setSavedDecisionSummary] = useState<string | null>(null);
 
@@ -65,6 +64,7 @@ export function CoachSessionStepper({
 
     setIsSubmitting(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const response = await fetch(`/api/trainings/${scheduledSessionId}`, {
@@ -82,7 +82,7 @@ export function CoachSessionStepper({
       }
 
       setFlowState("reflection");
-      router.refresh();
+      setSuccessMessage("Passet markerades som genomfort.");
     } catch (caughtError) {
       const message = caughtError instanceof Error ? caughtError.message : "Ovantat fel vid passavslut.";
       setError(message);
@@ -94,6 +94,7 @@ export function CoachSessionStepper({
   async function saveReflection(): Promise<void> {
     setIsSubmitting(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const response = await fetch("/api/reflections", {
@@ -119,7 +120,7 @@ export function CoachSessionStepper({
       const payload = (await response.json()) as { recommendation: RecommendationDto };
       setRecommendation(payload.recommendation);
       setFlowState("decision");
-      router.refresh();
+      setSuccessMessage("Reflektionen ar sparad. Recommendation visas nedan.");
     } catch (caughtError) {
       const message = caughtError instanceof Error ? caughtError.message : "Ovantat fel vid reflektion.";
       setError(message);
@@ -141,6 +142,7 @@ export function CoachSessionStepper({
 
     setIsSubmitting(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const response = await fetch(`/api/education-plans/${educationPlanId}/progress-events`, {
@@ -168,8 +170,8 @@ export function CoachSessionStepper({
           ? "Recommendation accepterad och sparad som progressionshandelse."
           : "Overstyrning sparad som progressionshandelse.",
       );
+      setSuccessMessage("Beslutet ar sparat i Education Plan Progress.");
       setFlowState("done");
-      router.refresh();
     } catch (caughtError) {
       const message = caughtError instanceof Error ? caughtError.message : "Ovantat fel vid beslutssparning.";
       setError(message);
@@ -195,7 +197,7 @@ export function CoachSessionStepper({
         </div>
 
         {currentExercise ? (
-          <div className="section" style={{ marginTop: 18 }}>
+          <div className="section">
             <p><strong>Syfte:</strong> {currentExercise.purpose}</p>
             <p><strong>Organisation:</strong> {currentExercise.area}</p>
             <details>
@@ -214,19 +216,12 @@ export function CoachSessionStepper({
           </div>
         ) : null}
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+        <div className="buttonRow">
           <button
             type="button"
             onClick={() => setCurrentPartIndex((index) => Math.max(0, index - 1))}
-            style={{
-              border: "1px solid var(--line)",
-              background: "#fff",
-              color: "var(--text)",
-              padding: "13px 18px",
-              borderRadius: 12,
-              fontWeight: 800,
-              opacity: canGoPrevious ? 1 : 0.5,
-            }}
+            className="secondaryButton"
+            style={{ marginTop: 0 }}
             disabled={!canGoPrevious}
           >
             Föregående
@@ -237,6 +232,7 @@ export function CoachSessionStepper({
               onClick={() => setCurrentPartIndex((index) => Math.min(session.parts.length - 1, index + 1))}
               className="primaryButton"
               style={{ marginTop: 0 }}
+              disabled={isReadOnlyCompleted}
             >
               Nästa passdel
             </button>
@@ -253,14 +249,21 @@ export function CoachSessionStepper({
           )}
         </div>
 
-        {error ? (
-          <p style={{ color: "#7f1d1d", marginTop: 12 }}>
-            {error}
+        <div aria-live="polite" aria-atomic="true">
+          {isSubmitting ? <p className="feedback info">Sparar...</p> : null}
+          {successMessage ? <p className="feedback success">{successMessage}</p> : null}
+        </div>
+
+        {scheduledSessionStatus === "completed" ? (
+          <p className="feedback info">
+            Passet ar redan markerat som genomfort och visas i read-only-lage.
           </p>
         ) : null}
+
+        {error ? <p className="feedback error" role="alert">{error}</p> : null}
       </div>
 
-      <div className="section" style={{ marginTop: 18 }}>
+      <div className="section">
         <h3>Passets struktur</h3>
         <div className="stack">
           {session.parts.map((part, index) => {
@@ -271,19 +274,10 @@ export function CoachSessionStepper({
                 key={`${part.exerciseId}-${index}`}
                 type="button"
                 onClick={() => setCurrentPartIndex(index)}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  border: "1px solid var(--line)",
-                  background: index === currentPartIndex ? "var(--accent2)" : "#fff",
-                  color: "var(--text)",
-                  padding: 14,
-                  borderRadius: 16,
-                }}
+                className={`sessionPartButton${index === currentPartIndex ? " active" : ""}`}
               >
                 <strong>{index + 1}. {exercise?.title ?? "Passdel"}</strong>
-                <div className="meta" style={{ marginTop: 8 }}>
+                <div className="meta">
                   <span>{part.duration} min</span>
                   <span>{part.focus}</span>
                 </div>
@@ -293,7 +287,7 @@ export function CoachSessionStepper({
         </div>
       </div>
 
-      <div className="section" style={{ marginTop: 18 }}>
+      <div className="section">
         <h3>Efter passet</h3>
         <div className="card">
           <ul>
@@ -305,7 +299,7 @@ export function CoachSessionStepper({
       </div>
 
       {flowState === "reflection" ? (
-        <div className="section" style={{ marginTop: 18 }}>
+        <div className="section">
           <h3>Reflektion direkt efter passet</h3>
           <div className="card formCard">
             <label>
@@ -352,9 +346,9 @@ export function CoachSessionStepper({
       ) : null}
 
       {flowState === "decision" && recommendation ? (
-        <div className="section" style={{ marginTop: 18 }}>
+        <div className="section">
           <h3>Recommendation och beslut</h3>
-          <div className="card" style={{ marginBottom: 12 }}>
+          <div className="card">
             <p className="eyebrow">{recommendation.type}</p>
             <h4>{recommendation.message}</h4>
             <p>{recommendation.pedagogicalRationale}</p>
@@ -397,8 +391,8 @@ export function CoachSessionStepper({
       ) : null}
 
       {flowState === "done" ? (
-        <div className="section" style={{ marginTop: 18 }}>
-          <div className="heroCard">
+        <div className="section">
+          <div className="heroCard stateSuccess">
             <h3>Passflodet ar slutfört</h3>
             <p>{savedDecisionSummary}</p>
             <button

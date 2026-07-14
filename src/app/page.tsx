@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { CoachSessionStepper } from "@/components/CoachSessionStepper";
 import { getCoachExperienceData } from "@/application/services/coachExperienceService";
@@ -11,7 +12,21 @@ function renderRecommendationMessage(message: string | null | undefined) {
 }
 
 export default async function HomePage() {
-  const coachData = await getCoachExperienceData();
+  let coachData;
+
+  try {
+    coachData = await getCoachExperienceData();
+  } catch {
+    return (
+      <>
+        <Header eyebrow="Coach Experience" title="Tränarläge" />
+        <section className="stateCard stateError">
+          <h2>Kunde inte ladda tränarläget</h2>
+          <p>Försök igen om en stund.</p>
+        </section>
+      </>
+    );
+  }
 
   if (!coachData.nextSession) {
     return (
@@ -38,15 +53,15 @@ export default async function HomePage() {
           <span>{nextSession.sessionDetail.session.players} spelare</span>
           {activePlan ? <span>Aktiv plan</span> : <span>Ingen aktiv plan</span>}
         </div>
-        <a className="primaryButton" href={`/pass/${nextSession.sessionDetail.session.id}`}>
+        <Link className="primaryButton" href={`/pass/${nextSession.sessionDetail.session.id}`}>
           Öppna passet
-        </a>
+        </Link>
       </section>
 
       <section className="section">
         <div className="sectionTitle">
           <h2>Plan och block</h2>
-          <a href="/utbildning">Visa planen</a>
+          <Link href="/utbildning">Visa planen</Link>
         </div>
         <article className="card">
           <p className="eyebrow">Aktiv utbildningsplan</p>
@@ -55,10 +70,17 @@ export default async function HomePage() {
             <span>{activeBlock?.themeTitle ?? "Inget aktivt block"}</span>
             <span>{activeBlock?.title ?? "Block saknas"}</span>
           </div>
-          <div className="progress" style={{ marginTop: 14 }}>
-            <span style={{ width: activeBlock ? "40%" : "0%" }} />
+          <div
+            className={`progress${activeBlock ? "" : " progressNeutral"}`}
+            style={{ marginTop: 14 }}
+            aria-label={activeBlock ? "Aktivt block finns" : "Progressdata saknas"}
+          >
+            <span style={{ width: activeBlock ? "40%" : "100%" }} />
           </div>
-          <p>{activeBlock?.description ?? "Planen saknar ännu ett aktivt block i seedad data."}</p>
+          <p>
+            {activeBlock?.description ??
+              "Neutral progress visas tills exakt progressdata finns tillganglig."}
+          </p>
         </article>
       </section>
 

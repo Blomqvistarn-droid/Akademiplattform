@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const items = [
   ["Hem", "/"],
@@ -9,9 +12,24 @@ const items = [
 ];
 
 export function BottomNav() {
+  const pathname = usePathname();
+
   return (
     <nav className="bottomNav" aria-label="Huvudnavigation">
-      {items.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
+      {items.map(([label, href]) => {
+        const isActive = pathname === href;
+
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={isActive ? "active" : undefined}
+            aria-current={isActive ? "page" : undefined}
+          >
+            {label}
+          </Link>
+        );
+      })}
     </nav>
   );
 }
