@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PUT as updateTraining } from "../../src/app/api/trainings/[id]/route";
 import { POST as createReflection } from "../../src/app/api/reflections/route";
+import { GET as getRecommendation } from "../../src/app/api/reflections/recommendation/route";
 import { GET as getEducationPlan } from "../../src/app/api/education-plans/route";
 import { POST as saveProgressEvent } from "../../src/app/api/education-plans/[id]/progress-events/route";
 
@@ -45,13 +46,32 @@ test("coach flow integration: completed -> reflection -> decision progress event
     recommendation: { type: "repeat" | "simplify" | "progress" | "advance" };
   };
 
+  const recommendationResponse = await getRecommendation(
+    new Request(
+      `http://localhost/api/reflections/recommendation?scheduledSessionId=${scheduledSessionId}`,
+      {
+        method: "GET",
+        headers,
+      },
+    ),
+  );
+  assert.equal(recommendationResponse.status, 200);
+  const recommendationPayload = (await recommendationResponse.json()) as {
+    type: "repeat" | "simplify" | "progress" | "advance";
+    isFallback: boolean;
+    evidence: { scheduledSessionId: string; reflectionCount: number };
+  };
+  assert.equal(recommendationPayload.isFallback, false);
+  assert.equal(recommendationPayload.evidence.scheduledSessionId, scheduledSessionId);
+  assert.ok(recommendationPayload.evidence.reflectionCount >= 1);
+
   const progressResponse = await saveProgressEvent(
     new Request(`http://localhost/api/education-plans/${educationPlanId}/progress-events`, {
       method: "POST",
       headers,
       body: JSON.stringify({
         scheduledSessionId,
-        recommendationType: reflectionPayload.recommendation.type,
+        recommendationType: recommendationPayload.type,
         decisionType: "accept",
         rationale: "Fortsatt progression enligt recommendation.",
       }),

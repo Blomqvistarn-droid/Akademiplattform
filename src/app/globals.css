@@ -358,6 +358,48 @@ textarea {
 	border: 1px solid var(--successLine);
 }
 
+.loopProgress {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.loopStep {
+	padding: 8px 10px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 700;
+	border: 1px solid var(--line);
+	background: #fff;
+	color: var(--muted);
+	text-align: center;
+}
+
+.loopStep.isCurrent {
+	background: var(--accent2);
+	color: var(--accent);
+	border-color: #b8dfbf;
+}
+
+.loopStep.isComplete {
+	background: #eff4ef;
+	color: #365443;
+	border-color: #cfdccf;
+}
+
+.checkItem {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin: 10px 0;
+	font-weight: 600;
+}
+
+.checkItem input[type="checkbox"] {
+	margin-top: 3px;
+}
+
 .bottomNav {
 	position: fixed;
 	z-index: 10;
@@ -428,5 +470,9 @@ summary:focus-visible {
 
 	.stack {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.loopProgress {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
 	}
 }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { Exercise } from "@/domains/academy/entities/Exercise";
 import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate";
 import type { RecommendationDto } from "@/application/reflection/dto/ReflectionDto";
@@ -16,7 +17,23 @@ interface CoachSessionStepperProps {
   exercises: readonly Exercise[];
 }
 
-type StepperFlowState = "session" | "reflection" | "decision" | "done";
+type StepperFlowState =
+  | "prepare"
+  | "session"
+  | "reflection"
+  | "decision"
+  | "nextStep";
+
+const FLOW_STEPS: ReadonlyArray<{
+  state: StepperFlowState;
+  label: string;
+}> = [
+  { state: "prepare", label: "Forbered" },
+  { state: "session", label: "Genomfor" },
+  { state: "reflection", label: "Reflektera" },
+  { state: "decision", label: "Rekommendation" },
+  { state: "nextStep", label: "Nasta steg" },
+];
 
 export function CoachSessionStepper({
   organizationId,
@@ -29,7 +46,12 @@ export function CoachSessionStepper({
 }: CoachSessionStepperProps) {
   const router = useRouter();
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
-  const [flowState, setFlowState] = useState<StepperFlowState>("session");
+  const [flowState, setFlowState] = useState<StepperFlowState>(
+    scheduledSessionStatus === "completed" ? "reflection" : "prepare",
+  );
+  const [isWarmupReady, setIsWarmupReady] = useState(false);
+  const [isAreaReady, setIsAreaReady] = useState(false);
+  const [isCommunicationReady, setIsCommunicationReady] = useState(false);
   const [understanding, setUnderstanding] = useState(3);
   const [independence, setIndependence] = useState(3);
   const [notes, setNotes] = useState("");
@@ -54,6 +76,20 @@ export function CoachSessionStepper({
   const canGoPrevious = currentPartIndex > 0;
   const canGoNext = currentPartIndex < session.parts.length - 1;
   const isReadOnlyCompleted = scheduledSessionStatus === "completed" && flowState === "session";
+  const prepareChecklistComplete =
+    isWarmupReady && isAreaReady && isCommunicationReady;
+  const currentStepIndex = FLOW_STEPS.findIndex((step) => step.state === flowState);
+
+  function moveToSessionExecution(): void {
+    if (!prepareChecklistComplete) {
+      setError("Bekrafta forberedelserna innan du gar vidare till genomforandet.");
+      return;
+    }
+
+    setError(null);
+    setSuccessMessage("Forberedelser klara. Du kan nu genomfora passet.");
+    setFlowState("session");
+  }
 
   async function markSessionCompleted(): Promise<void> {
     const confirmed = window.confirm("Bekrafta att passet ar genomfort innan du fortsatter till reflektion.");
@@ -171,7 +207,7 @@ export function CoachSessionStepper({
           : "Overstyrning sparad som progressionshandelse.",
       );
       setSuccessMessage("Beslutet ar sparat i Education Plan Progress.");
-      setFlowState("done");
+      setFlowState("nextStep");
     } catch (caughtError) {
       const message = caughtError instanceof Error ? caughtError.message : "Ovantat fel vid beslutssparning.";
       setError(message);
@@ -183,120 +219,200 @@ export function CoachSessionStepper({
   return (
     <section className="section">
       <div className="sectionTitle">
-        <h2>Genomför passet steg för steg</h2>
-        <span className="pill">{currentPartIndex + 1}/{session.parts.length}</span>
+        <h2>Coachloop: Program till Pass till Forbered till Genomfor till Reflektera till Rekommendation till Nasta steg</h2>
+        {flowState === "session" ? <span className="pill">{currentPartIndex + 1}/{session.parts.length}</span> : null}
       </div>
       <div className="card">
-        <p className="eyebrow">Aktiv passdel</p>
-        <h3>{currentExercise?.title ?? session.title}</h3>
-        <p>{currentPart?.focus}</p>
-        <div className="meta">
-          <span>{currentExercise?.activityType ?? session.stage}</span>
-          <span>{currentPart?.duration ?? session.duration} min</span>
-          {currentPart?.optional ? <span>Valfri del</span> : null}
-        </div>
-
-        {currentExercise ? (
-          <div className="section">
-            <p><strong>Syfte:</strong> {currentExercise.purpose}</p>
-            <p><strong>Organisation:</strong> {currentExercise.area}</p>
-            <details>
-              <summary>Instruktioner och coachning</summary>
-              <h4>Setup</h4>
-              <ul>{currentExercise.setup.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h4>Regler</h4>
-              <ul>{currentExercise.rules.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h4>Coachningspunkter</h4>
-              <ul>{currentExercise.coachingPoints.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h4>Progression</h4>
-              <ul>{currentExercise.progressions.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h4>Förenklingar</h4>
-              <ul>{currentExercise.simplifications.map((item) => <li key={item}>{item}</li>)}</ul>
-            </details>
-          </div>
-        ) : null}
-
+        <p className="eyebrow">Start i befintligt flode</p>
         <div className="buttonRow">
-          <button
-            type="button"
-            onClick={() => setCurrentPartIndex((index) => Math.max(0, index - 1))}
+          <Link className="secondaryButton" href="/utbildning" style={{ marginTop: 0 }}>
+            Program
+          </Link>
+          <Link
             className="secondaryButton"
+            href={`/pass/${session.id}`}
             style={{ marginTop: 0 }}
-            disabled={!canGoPrevious}
           >
-            Föregående
-          </button>
-          {canGoNext ? (
-            <button
-              type="button"
-              onClick={() => setCurrentPartIndex((index) => Math.min(session.parts.length - 1, index + 1))}
-              className="primaryButton"
-              style={{ marginTop: 0 }}
-              disabled={isReadOnlyCompleted}
-            >
-              Nästa passdel
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="primaryButton"
-              style={{ marginTop: 0 }}
-              onClick={markSessionCompleted}
-              disabled={isSubmitting || isReadOnlyCompleted}
-            >
-              {isReadOnlyCompleted ? "Passet ar redan genomfort" : "Markera genomfort"}
-            </button>
-          )}
+            Pass
+          </Link>
         </div>
-
-        <div aria-live="polite" aria-atomic="true">
-          {isSubmitting ? <p className="feedback info">Sparar...</p> : null}
-          {successMessage ? <p className="feedback success">{successMessage}</p> : null}
-        </div>
-
-        {scheduledSessionStatus === "completed" ? (
-          <p className="feedback info">
-            Passet ar redan markerat som genomfort och visas i read-only-lage.
-          </p>
-        ) : null}
-
-        {error ? <p className="feedback error" role="alert">{error}</p> : null}
       </div>
-
-      <div className="section">
-        <h3>Passets struktur</h3>
-        <div className="stack">
-          {session.parts.map((part, index) => {
-            const exercise = exerciseMap.get(String(part.exerciseId));
+      <div className="card">
+        <p className="eyebrow">Stegprogression</p>
+        <div className="loopProgress" aria-label="Steg i coachloopen">
+          {FLOW_STEPS.map((step, index) => {
+            const stateClass =
+              currentStepIndex > index
+                ? "isComplete"
+                : currentStepIndex === index
+                  ? "isCurrent"
+                  : "isUpcoming";
 
             return (
-              <button
-                key={`${part.exerciseId}-${index}`}
-                type="button"
-                onClick={() => setCurrentPartIndex(index)}
-                className={`sessionPartButton${index === currentPartIndex ? " active" : ""}`}
-              >
-                <strong>{index + 1}. {exercise?.title ?? "Passdel"}</strong>
-                <div className="meta">
-                  <span>{part.duration} min</span>
-                  <span>{part.focus}</span>
-                </div>
-              </button>
+              <span key={step.state} className={`loopStep ${stateClass}`}>
+                {step.label}
+              </span>
             );
           })}
         </div>
       </div>
 
-      <div className="section">
-        <h3>Efter passet</h3>
-        <div className="card">
-          <ul>
-            {session.reflectionQuestions.map((question) => (
-              <li key={question}>{question}</li>
-            ))}
-          </ul>
+      {flowState === "prepare" ? (
+        <div className="section">
+          <h3>Forbered passet</h3>
+          <div className="card">
+            <p>Integrera planeringen i coachflodet innan genomforandet startar.</p>
+            <label className="checkItem">
+              <input
+                type="checkbox"
+                checked={isWarmupReady}
+                onChange={(event) => setIsWarmupReady(event.target.checked)}
+              />
+              Uppvarmning och ovriga passdelar ar validerade.
+            </label>
+            <label className="checkItem">
+              <input
+                type="checkbox"
+                checked={isAreaReady}
+                onChange={(event) => setIsAreaReady(event.target.checked)}
+              />
+              Yta, material och organisation ar forberedda.
+            </label>
+            <label className="checkItem">
+              <input
+                type="checkbox"
+                checked={isCommunicationReady}
+                onChange={(event) => setIsCommunicationReady(event.target.checked)}
+              />
+              Coachningsfokus och nyckelbudskap ar tydliga for gruppen.
+            </label>
+            <button
+              type="button"
+              className="primaryButton"
+              onClick={moveToSessionExecution}
+              disabled={!prepareChecklistComplete}
+            >
+              Starta genomforande
+            </button>
+          </div>
         </div>
+      ) : null}
+
+      {flowState === "session" ? (
+        <>
+          <div className="card">
+            <p className="eyebrow">Aktiv passdel</p>
+            <h3>{currentExercise?.title ?? session.title}</h3>
+            <p>{currentPart?.focus}</p>
+            <div className="meta">
+              <span>{currentExercise?.activityType ?? session.stage}</span>
+              <span>{currentPart?.duration ?? session.duration} min</span>
+              {currentPart?.optional ? <span>Valfri del</span> : null}
+            </div>
+
+            {currentExercise ? (
+              <div className="section">
+                <p><strong>Syfte:</strong> {currentExercise.purpose}</p>
+                <p><strong>Organisation:</strong> {currentExercise.area}</p>
+                <details>
+                  <summary>Instruktioner och coachning</summary>
+                  <h4>Setup</h4>
+                  <ul>{currentExercise.setup.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <h4>Regler</h4>
+                  <ul>{currentExercise.rules.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <h4>Coachningspunkter</h4>
+                  <ul>{currentExercise.coachingPoints.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <h4>Progression</h4>
+                  <ul>{currentExercise.progressions.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <h4>Förenklingar</h4>
+                  <ul>{currentExercise.simplifications.map((item) => <li key={item}>{item}</li>)}</ul>
+                </details>
+              </div>
+            ) : null}
+
+            <div className="buttonRow">
+              <button
+                type="button"
+                onClick={() => setCurrentPartIndex((index) => Math.max(0, index - 1))}
+                className="secondaryButton"
+                style={{ marginTop: 0 }}
+                disabled={!canGoPrevious}
+              >
+                Föregående
+              </button>
+              {canGoNext ? (
+                <button
+                  type="button"
+                  onClick={() => setCurrentPartIndex((index) => Math.min(session.parts.length - 1, index + 1))}
+                  className="primaryButton"
+                  style={{ marginTop: 0 }}
+                  disabled={isReadOnlyCompleted}
+                >
+                  Nästa passdel
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="primaryButton"
+                  style={{ marginTop: 0 }}
+                  onClick={markSessionCompleted}
+                  disabled={isSubmitting || isReadOnlyCompleted}
+                >
+                  {isReadOnlyCompleted ? "Passet ar redan genomfort" : "Markera genomfort"}
+                </button>
+              )}
+            </div>
+
+            {scheduledSessionStatus === "completed" ? (
+              <p className="feedback info">
+                Passet ar redan markerat som genomfort och visas i read-only-lage.
+              </p>
+            ) : null}
+          </div>
+
+          <div className="section">
+            <h3>Passets struktur</h3>
+            <div className="stack">
+              {session.parts.map((part, index) => {
+                const exercise = exerciseMap.get(String(part.exerciseId));
+
+                return (
+                  <button
+                    key={`${part.exerciseId}-${index}`}
+                    type="button"
+                    onClick={() => setCurrentPartIndex(index)}
+                    className={`sessionPartButton${index === currentPartIndex ? " active" : ""}`}
+                  >
+                    <strong>{index + 1}. {exercise?.title ?? "Passdel"}</strong>
+                    <div className="meta">
+                      <span>{part.duration} min</span>
+                      <span>{part.focus}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="section">
+            <h3>Efter passet</h3>
+            <div className="card">
+              <ul>
+                {session.reflectionQuestions.map((question) => (
+                  <li key={question}>{question}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      <div aria-live="polite" aria-atomic="true">
+        {isSubmitting ? <p className="feedback info">Sparar...</p> : null}
+        {successMessage ? <p className="feedback success">{successMessage}</p> : null}
       </div>
+
+      {error ? <p className="feedback error" role="alert">{error}</p> : null}
 
       {flowState === "reflection" ? (
         <div className="section">
@@ -390,18 +506,30 @@ export function CoachSessionStepper({
         </div>
       ) : null}
 
-      {flowState === "done" ? (
+      {flowState === "nextStep" ? (
         <div className="section">
           <div className="heroCard stateSuccess">
-            <h3>Passflodet ar slutfört</h3>
+            <h3>Nasta steg</h3>
             <p>{savedDecisionSummary}</p>
-            <button
-              type="button"
-              className="primaryButton"
-              onClick={() => router.refresh()}
-            >
-              Tillbaka till uppdaterad dashboard
-            </button>
+            <p>
+              Loopen ar nu komplett: Program till Pass till Forbered till Genomfor till Reflektera till Rekommendation till Nasta steg.
+            </p>
+            <div className="buttonRow">
+              <button
+                type="button"
+                className="primaryButton"
+                onClick={() => router.refresh()}
+              >
+                Uppdatera dashboard
+              </button>
+              <button
+                type="button"
+                className="secondaryButton"
+                onClick={() => router.push("/utbildning")}
+              >
+                Ga till Program
+              </button>
+            </div>
           </div>
         </div>
       ) : null}

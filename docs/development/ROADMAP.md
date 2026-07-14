@@ -173,6 +173,20 @@ Levererat innehåll:
 - regressionstester for programresan och fortsatt gron kvalitetsgrind
 - verifierad coachkedja i integrationskornig utan regressionsutfall
 
+### Version 0.9 - Coach Loop Completion
+
+Status: Klar
+
+Levererat innehall:
+
+- integrerat Forbered-steg i befintlig coachstepper
+- visuell stegprogression i coachloopen
+- klickbart Program- och Pass-led i samma coachflode
+- explicit Nasta steg efter recommendation och beslut
+- roadmap och sprintplan synkade med 0.9-kedjan och constraints
+- integrationsverifiering for recommendation-steget i local och database-lage
+- bibehallen kvalitetsgrind: lint, test, test:integration och build
+
 ### Version 1.0
 
 En stabil första produktionsversion med komplett utbildningsflöde från planering till uppföljning.
@@ -245,4 +259,11 @@ v0.8 (senaste verifiering):
 - `npm run lint`: pass
 - `npm test`: 86 pass, 0 fail
 - `npm run test:integration`: 13 pass, 0 fail, 0 skip
+- `npm run build`: pass
+
+v0.9 (senaste verifiering):
+
+- `npm run lint`: pass
+- `npm test`: 86 pass, 0 fail
+- `npm run test:integration`: 13 pass, 0 fail
 - `npm run build`: pass
