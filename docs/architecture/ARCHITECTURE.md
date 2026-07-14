@@ -58,6 +58,24 @@ Följande use cases är implementerade i Application-lagret:
 - UpdateTraining
 - ArchiveTraining
 
+## Version 0.6.2 Referensflöde (Complete Coach Flow)
+
+Andra kompletta vertikalen i coachflodet:
+
+HTTP -> API Route -> Application Handler -> Unit of Work -> Repository -> Commit/Rollback -> HTTP Response
+
+Sammanhangande flode:
+
+- PUT /api/trainings/{id} (completed)
+- POST /api/reflections (inline-reflektion)
+- GET /api/reflections/recommendation (recommendation)
+- POST /api/education-plans/{id}/progress-events (coach decision som progress event)
+
+Designregel i 0.6.2:
+
+- coach decision tillhor Education Plan Progress
+- ingen ny huvuddoman eller fristaende coach-decision-resurs introduceras
+
 ## Arkitekturkrav: Organization Isolation
 
 - Alla write/read-operationer kräver organization context.

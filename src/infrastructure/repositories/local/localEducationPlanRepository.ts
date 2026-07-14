@@ -1,7 +1,14 @@
 import type { OrganizationContext } from "../../../application/context/OrganizationContext";
 import type { EducationPlan } from "../../../domains/educationPlan/entities/EducationPlan";
 import type { EducationPlanRepository } from "../../../domains/educationPlan/repositories/EducationPlanRepository";
-import { toEducationPlanId } from "../../../domains/educationPlan/types/ids";
+import {
+  toEducationPlanBlockId,
+  toEducationPlanId,
+} from "../../../domains/educationPlan/types/ids";
+import {
+  toEducationBlockId,
+  toSessionTemplateId,
+} from "../../../domains/academy/types/ids";
 
 interface ScopedEducationPlanData {
   readonly organizationId: string;
@@ -22,8 +29,29 @@ const EDUCATION_PLAN_DATA: readonly ScopedEducationPlanData[] = [
         organizationId: "00000000-0000-0000-0000-000000000001",
         teamId: "00000000-0000-0000-0000-000000000101",
         status: "active",
-        activeBlockId: null,
-        blocks: [],
+        activeBlockId: toEducationPlanBlockId("00000000-0000-0000-0000-000000020001"),
+        blocks: [
+          {
+            id: toEducationPlanBlockId("00000000-0000-0000-0000-000000020001"),
+            educationPlanId: toEducationPlanId(
+              "00000000-0000-0000-0000-000000010001",
+            ),
+            educationBlockId: toEducationBlockId("block-winger"),
+            sessionTemplateId: toSessionTemplateId("session-winger-1"),
+            order: 1,
+            status: "active",
+          },
+          {
+            id: toEducationPlanBlockId("00000000-0000-0000-0000-000000020002"),
+            educationPlanId: toEducationPlanId(
+              "00000000-0000-0000-0000-000000010001",
+            ),
+            educationBlockId: toEducationBlockId("block-winger"),
+            sessionTemplateId: toSessionTemplateId("session-winger-2"),
+            order: 2,
+            status: "planned",
+          },
+        ],
         progressEvents: [],
         createdAt: "2026-07-13T10:00:00.000Z",
         updatedAt: "2026-07-13T10:00:00.000Z",

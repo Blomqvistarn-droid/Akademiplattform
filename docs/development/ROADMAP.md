@@ -93,7 +93,46 @@ Levererat i versionen:
 - Recommendation med pedagogisk motivering, underlag och fallback
 - Reflection-integrationstester för repository och API
 
-### Version 0.5 – Akademi
+### Version 0.5 – Education Plan och Team Progression
+
+Status: Klar som beslutad planerings- och implementeringsgrund
+
+Levererat och dokumenterat:
+
+- Education Plan som central doman for plan, block och progression
+- Application Layer for list, get och start av Education Plan
+- Local repository med organization-scoping
+- HTTP API for /api/education-plans
+- Produktbeslut for en aktiv plan per lag, ett aktivt block per plan och radgivande Recommendation
+
+### Version 0.6 - Sprintserie
+
+Status: Pagaende
+
+Sprintindelning:
+
+- Sprint 0.6.1 - Coach Experience Foundation: Klar
+- Sprint 0.6.2 - Complete Coach Flow: Klar
+- Sprint 0.6.3 - UX Polish: Planerad
+
+Planerat innehall:
+
+- mobilforst tranarlage
+- dagens eller nasta planerade pass
+- passoversikt med syfte, delar och laramal
+- navigering mellan passdelar
+- markera pass som completed
+- snabb reflektion direkt efter pass
+- recommendation och progressionsbeslut i Education Plan i ett sammanhangande flode
+
+Levererat i Sprint 0.6.2:
+
+- completed-markering med aktiv bekraftelse
+- inline-reflektion i coachflodet
+- recommendation direkt efter sparad reflektion
+- coach decision sparad som Progress Event i Education Plan
+- progressuppdatering direkt efter beslut
+- integrationstest for komplett coachflode
 
 Planerat innehåll:
 

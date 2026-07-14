@@ -8,7 +8,12 @@ import type {
 export type EducationPlanProgressEventType =
   | "sessionCompleted"
   | "reflectionRecorded"
-  | "recommendationRecorded";
+  | "recommendationRecorded"
+  | "coachDecisionRecorded";
+
+export type CoachDecisionType = "accept" | "override";
+
+export type RecommendationType = "repeat" | "simplify" | "progress" | "advance";
 
 export interface EducationPlanProgressEvent {
   id: EducationPlanProgressId;
@@ -17,5 +22,9 @@ export interface EducationPlanProgressEvent {
   teamId: TeamId;
   eventType: EducationPlanProgressEventType;
   completedSessionCount: number;
+  scheduledSessionId?: string;
+  recommendationType?: RecommendationType;
+  decisionType?: CoachDecisionType;
+  rationale?: string | null;
   createdAt: string;
 }

@@ -79,7 +79,52 @@ Exponerade endpointmönster:
 - PUT /trainings/{id}
 - DELETE /trainings/{id}
 
+Utökade endpointmönster i senare sprintar:
+
+- POST /reflections
+- GET /reflections
+- GET /reflections/{id}
+- GET /reflections/recommendation
+- GET /education-plans
+- POST /education-plans
+- POST /education-plans/{id}/progress-events
+
 Alla operationer kräver organization context och ska isolera data per organisation.
+
+---
+
+## Informationsmodell - Coach Flow (Sprint 0.6.2)
+
+Informationsflode:
+
+EducationPlan
+-> Active EducationPlanBlock
+-> ScheduledSession
+-> SessionTemplate
+-> Session Parts och Exercises
+-> Completed ScheduledSession
+-> SessionReflection
+-> Recommendation
+-> Coach Decision (accept/override)
+-> EducationPlanProgressEvent (coachDecisionRecorded)
+
+Domandata:
+
+- ScheduledSession status (planned/completed/cancelled)
+- SessionReflection (understandingScore, independenceScore, notes)
+- Recommendation (type, rationale, evidence, fallback)
+- EducationPlanProgressEvent (eventType, scheduledSessionId, recommendationType, decisionType, rationale)
+
+Bekraftelsepunkter i flodet:
+
+- tranaren markerar passet som completed
+- tranaren sparar reflektion
+- tranaren accepterar eller overstyr recommendation
+
+Arkitekturregel:
+
+- Coach Decision modelleras som Progress Event i Education Plan
+- Ingen ny huvuddoman eller fristaende beslutresurs introduceras
 
 ---
 

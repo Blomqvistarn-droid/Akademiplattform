@@ -1,8 +1,8 @@
-import type { EducationBlock } from "@/domains/academy/entities/EducationBlock";
-import type { EducationProgram } from "@/domains/academy/entities/EducationProgram";
-import type { LearningQuestion } from "@/domains/academy/entities/LearningQuestion";
-import type { Theme } from "@/domains/academy/entities/Theme";
-import type { EducationContentRepository } from "@/domains/academy/repositories/EducationContentRepository";
+import type { EducationBlock } from "../entities/EducationBlock";
+import type { EducationProgram } from "../entities/EducationProgram";
+import type { LearningQuestion } from "../entities/LearningQuestion";
+import type { Theme } from "../entities/Theme";
+import type { EducationContentRepository } from "../repositories/EducationContentRepository";
 
 export interface ThemeStructure {
   readonly theme: Theme;

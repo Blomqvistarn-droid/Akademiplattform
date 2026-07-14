@@ -1,8 +1,8 @@
-import type { Exercise } from "@/domains/academy/entities/Exercise";
-import type { SessionTemplate } from "@/domains/academy/entities/SessionTemplate";
-import { getProgramStructures } from "@/domains/academy/queries/getProgramStructures";
-import { toExerciseId, toSessionTemplateId } from "@/domains/academy/types/ids";
-import { createRuntimeDependencies } from "@/composition/createRuntimeDependencies";
+import type { Exercise } from "../../domains/academy/entities/Exercise";
+import type { SessionTemplate } from "../../domains/academy/entities/SessionTemplate";
+import { getProgramStructures } from "../../domains/academy/queries/getProgramStructures";
+import { toExerciseId, toSessionTemplateId } from "../../domains/academy/types/ids";
+import { createRuntimeDependencies } from "../../composition/createRuntimeDependencies";
 
 export interface SessionDetailData {
   session: SessionTemplate;
