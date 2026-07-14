@@ -11,6 +11,9 @@ import {
 import {
   createPostgresEducationContentRepository,
 } from "../infrastructure/repositories/database/postgresEducationContentRepository";
+import {
+  createPostgresEducationPlanRepository,
+} from "../infrastructure/repositories/database/postgresEducationPlanRepository";
 import { createPostgresTrainingRepository } from "../infrastructure/repositories/database/postgresTrainingRepository";
 import { localEducationContentRepository } from "../infrastructure/repositories/local/localEducationContentRepository";
 import { createLocalEducationPlanRepository } from "../infrastructure/repositories/local/localEducationPlanRepository";
@@ -55,7 +58,10 @@ export function createRuntimeDependencies(
         organizationContext,
         pool,
       }),
-      educationPlanRepository: createLocalEducationPlanRepository(organizationContext),
+      educationPlanRepository: createPostgresEducationPlanRepository({
+        organizationContext,
+        pool,
+      }),
       trainingRepository: createPostgresTrainingRepository({
         organizationContext,
         pool,

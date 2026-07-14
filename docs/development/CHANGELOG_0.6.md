@@ -184,9 +184,11 @@ Sprint 0.6.3 verifierad genom:
 
 Föreslagen inriktning efter 0.6.3:
 
-- säkerställ att lint fortsätter köras automatiskt i CI
-- fortsatt UX-hardening i kärnflöden med fokus på automatiserade UI-tester
-- datalagerparitet för Education Plan mellan local och database-provider
+- Sprint 0.7 planeras som Data Parity & Quality Hardening
+- datalagerparitet för Education Plan ska verifieras via gemensamt beteendekontrakt för local och database-provider
+- provider-val i databasläge ska vara explicit och fail-fast utan dold local fallback
+- kvalitetsgrinden delas i obligatorisk basnivå och dokumenterad databasverifiering
+- automatiserat högvärdestest ska täcka completed -> reflection -> recommendation -> decision -> återläst progress update
 
 Ingen ny huvuddomän ska introduceras utan separat produktbeslut.
 
